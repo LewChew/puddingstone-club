@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puddingstone Club - Little Compton's Premier Social Supper Club</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2691E;
+            --accent-color: #FF6B35;
+            --text-dark: #2C1810;
+            --text-light: #6B4423;
+            --bg-light: #FFF8F0;
+            --bg-white: #FFFFFF;
+            --border-color: #E5D4C1;
+            --success-color: #4CAF50;
+            --hover-color: #FFF3E0;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.95;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--bg-white);
+            border-bottom: 2px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-color);
+            background-color: var(--hover-color);
+        }
+
+        /* Sections */
+        .section {
+            padding: 3rem 0;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        /* Welcome Section */
+        .welcome-content {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        /* Scheduler Section */
+        .scheduler-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .month-selector button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .month-selector button:hover {
+            background: var(--primary-color);
+        }
+
+        #currentMonth {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        /* Calendar Grid */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: white;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .calendar-day.selected {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .day-number {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .availability-count {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            color: var(--success-color);
+        }
+
+        .calendar-day.selected .availability-count {
+            color: white;
+        }
+
+        /* Member Availability */
+        .member-input {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .member-input h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .selected-dates {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+
+        .selected-date-tag {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        /* Results Section */
+        .results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+        }
+
+        .results h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .result-item {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--bg-light);
+            border-radius: 5px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .result-date {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .result-members {
+            margin-top: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .member-list {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .member-list h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .member-name {
+            font-weight: 500;
+        }
+
+        .remove-member {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .remove-member:hover {
+            background: #cc0000;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .calendar {
+                gap: 5px;
+            }
+
+            .calendar-day {
+                font-size: 0.9rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>🍷 Puddingstone Club</h1>
+                <p class="tagline">Little Compton's Premier Social Supper Club</p>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#" data-section="welcome" class="active">Welcome</a></li>
+                <li><a href="#" data-section="scheduler">Event Scheduler</a></li>
+                <li><a href="#" data-section="members">Members</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Welcome Section -->
+        <section id="welcome" class="section active">
+            <h2 class="section-title">Welcome to Puddingstone Club</h2>
+            <div class="welcome-content">
+                <p>Welcome to Little Compton's most cherished gathering of food enthusiasts and friends. The Puddingstone Club brings together busy professionals and families who share a passion for exceptional cuisine, warm conversation, and the irreplaceable joy of communal dining.</p>
+                <p>Our intimate group of members meets regularly for carefully curated supper events, where the menu is matched only by the quality of the company. Despite our demanding schedules, we make time for what matters most: good food and great friendship.</p>
+                <p>Use our scheduling tool to help coordinate our next memorable evening together.</p>
+            </div>
+        </section>
+
+        <!-- Scheduler Section -->
+        <section id="scheduler" class="section">
+            <h2 class="section-title">Event Scheduler</h2>
+            <div class="scheduler-container">
+                <div class="member-input">
+                    <h3>Submit Your Availability</h3>
+                    <div class="input-group">
+                        <input type="text" id="memberName" placeholder="Enter your name">
+                        <button class="btn" onclick="setMemberName()">Set Name</button>
+                    </div>
+                    <div class="selected-dates" id="selectedDates">
+                        <span class="empty-state">Click on calendar dates to select your available days</span>
+                    </div>
+                    <button class="btn" onclick="submitAvailability()" style="margin-top: 1rem;">Submit Availability</button>
+                </div>
+
+                <div class="month-selector">
+                    <button onclick="changeMonth(-1)">← Previous</button>
+                    <span id="currentMonth"></span>
+                    <button onclick="changeMonth(1)">Next →</button>
+                </div>
+
+                <div class="calendar" id="calendar"></div>
+
+                <div class="results" id="results">
+                    <h3>📅 Best Dates for Next Gathering</h3>
+                    <div id="resultsList">
+                        <p class="empty-state">No availability submitted yet. Members can select their available dates above.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Members Section -->
+        <section id="members" class="section">
+            <h2 class="section-title">Club Members</h2>
+            <div class="member-list">
+                <h3>Current Members</h3>
+                <div id="membersList">
+                    <p class="empty-state">No members have submitted availability yet.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Puddingstone Club - Little Compton, Rhode Island</p>
+            <p>Where busy lives pause for exceptional gatherings</p>
+        </div>
+    </footer>
+
+    <script>
+        // Application State
+        let currentMonth = new Date();
+        let selectedDates = [];
+        let currentMemberName = '';
+        let memberAvailability = {};
+
+        // Navigation
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionName = link.dataset.section;
+                
+                // Update active nav
+                document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show section
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(sectionName).classList.add('active');
+            });
+        });
+
+        // Calendar Functions
+        function initCalendar() {
+            updateMonthDisplay();
+            renderCalendar();
+            loadStoredData();
+        }
+
+        function updateMonthDisplay() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonth').textContent = 
+                `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+        }
+
+        function changeMonth(direction) {
+            currentMonth.setMonth(currentMonth.getMonth() + direction);
+            updateMonthDisplay();
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = day;
+                calendar.appendChild(header);
+            });
+            
+            // Get first day of month
+            const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+            const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            // Generate calendar days
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day';
+                
+                if (date.getMonth() !== currentMonth.getMonth()) {
+                    dayDiv.classList.add('other-month');
+                } else {
+                    dayDiv.onclick = () => toggleDate(date);
+                    
+                    // Check if date is selected
+                    const dateStr = formatDate(date);
+                    if (selectedDates.includes(dateStr)) {
+                        dayDiv.classList.add('selected');
+                    }
+                    
+                    // Add availability count
+                    const availCount = getAvailabilityCount(dateStr);
+                    if (availCount > 0) {
+                        const countSpan = document.createElement('div');
+                        countSpan.className = 'availability-count';
+                        countSpan.textContent = `${availCount} available`;
+                        dayDiv.appendChild(countSpan);
+                    }
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = date.getDate();
+                dayDiv.insertBefore(dayNumber, dayDiv.firstChild);
+                
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        function formatDate(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function toggleDate(date) {
+            const dateStr = formatDate(date);
+            const index = selectedDates.indexOf(dateStr);
+            
+            if (index === -1) {
+                selectedDates.push(dateStr);
+            } else {
+                selectedDates.splice(index, 1);
+            }
+            
+            renderCalendar();
+            updateSelectedDatesDisplay();
+        }
+
+        function updateSelectedDatesDisplay() {
+            const container = document.getElementById('selectedDates');
+            
+            if (selectedDates.length === 0) {
+                container.innerHTML = '<span class="empty-state">Click on calendar dates to select your available days</span>';
+            } else {
+                container.innerHTML = selectedDates.sort().map(date => {
+                    const d = new Date(date);
+                    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                    return `<span class="selected-date-tag">${d.toLocaleDateString('en-US', options)}</span>`;
+                }).join('');
+            }
+        }
+
+        function setMemberName() {
+            const input = document.getElementById('memberName');
+            currentMemberName = input.value.trim();
+            
+            if (currentMemberName) {
+                alert(`Name set to: ${currentMemberName}`);
+            } else {
+                alert('Please enter your name');
+            }
+        }
+
+        function submitAvailability() {
+            if (!currentMemberName) {
+                alert('Please enter your name first');
+                return;
+            }
+            
+            if (selectedDates.length === 0) {
+                alert('Please select at least one available date');
+                return;
+            }
+            
+            // Store availability
+            memberAvailability[currentMemberName] = [...selectedDates];
+            saveToLocalStorage();
+            
+            // Clear selection
+            selectedDates = [];
+            document.getElementById('memberName').value = '';
+            currentMemberName = '';
+            
+            updateSelectedDatesDisplay();
+            updateResults();
+            updateMembersList();
+            renderCalendar();
+            
+            alert('Availability submitted successfully!');
+        }
+
+        function getAvailabilityCount(dateStr) {
+            let count = 0;
+            for (const member in memberAvailability) {
+                if (memberAvailability[member].includes(dateStr)) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        function updateResults() {
+            const resultsDiv = document.getElementById('resultsList');
+            
+            if (Object.keys(memberAvailability).length === 0) {
+                resultsDiv.innerHTML = '<p class="empty-state">No availability submitted yet. Members can select their available dates above.</p>';
+                return;
+            }
+            
+            // Aggregate availability
+            const dateAggregation = {};
+            for (const member in memberAvailability) {
+                memberAvailability[member].forEach(date => {
+                    if (!dateAggregation[date]) {
+                        dateAggregation[date] = [];
+                    }
+                    dateAggregation[date].push(member);
+                });
+            }
+            
+            // Sort by number of available members
+            const sortedDates = Object.entries(dateAggregation)
+                .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
+                .filter(([date, members]) => members.length >= 2); // Only show dates with 2+ members
+            
+            if (sortedDates.length === 0) {
+                resultsDiv.innerHTML = '<p class="empty-state">No dates have multiple members available yet.</p>';
+                return;
+            }
+            
+            // Display top dates
+            resultsDiv.innerHTML = sortedDates.slice(0, 5).map(([date, members]) => {
+                const d = new Date(date);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                return `
+                    <div class="result-item">
+                        <div class="result-date">${d.toLocaleDateString('en-US', options)}</div>
+                        <div class="result-members">${members.length} members available: ${members.join(', ')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateMembersList() {
+            const membersDiv = document.getElementById('membersList');
+            const members = Object.keys(memberAvailability);
+            
+            if (members.length === 0) {
+                membersDiv.innerHTML = '<p class="empty-state">No members have submitted availability yet.</p>';
+                return;
+            }
+            
+            membersDiv.innerHTML = members.map(member => `
+                <div class="member-item">
+                    <span class="member-name">${member}</span>
+                    <button class="remove-member" onclick="removeMember('${member}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function removeMember(memberName) {
+            if (confirm(`Remove ${memberName} and their availability?`)) {
+                delete memberAvailability[memberName];
+                saveToLocalStorage();
+                updateResults();
+                updateMembersList();
+                renderCalendar();
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('puddingstoneAvailability', JSON.stringify(memberAvailability));
+        }
+
+        function loadStoredData() {
+            const stored = localStorage.getItem('puddingstoneAvailability');
+            if (stored) {
+                memberAvailability = JSON.parse(stored);
+                updateResults();
+                updateMembersList();
+                renderCalendar();
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initCalendar);
+    </script>
+</body>
+</html>

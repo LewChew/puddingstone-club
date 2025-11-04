@@ -381,12 +381,74 @@
             background: #cc0000;
         }
 
+        /* Screen reader only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 2rem;
             color: var(--text-light);
             font-style: italic;
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.error {
+            border-left-color: #ff4444;
+        }
+
+        .notification.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+
+        .notification-message {
+            flex: 1;
+            color: var(--text-dark);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Footer */
@@ -457,26 +519,27 @@
                 <div class="member-input">
                     <h3>Submit Your Availability</h3>
                     <div class="input-group">
-                        <input type="text" id="memberName" placeholder="Enter your name">
-                        <button class="btn" onclick="setMemberName()">Set Name</button>
+                        <label for="memberName" class="sr-only">Your Name</label>
+                        <input type="text" id="memberName" placeholder="Enter your name" aria-label="Your name" autocomplete="name" maxlength="50">
+                        <button class="btn" onclick="setMemberName()" aria-label="Set your name">Set Name</button>
                     </div>
-                    <div class="selected-dates" id="selectedDates">
+                    <div class="selected-dates" id="selectedDates" role="status" aria-live="polite">
                         <span class="empty-state">Click on calendar dates to select your available days</span>
                     </div>
-                    <button class="btn" onclick="submitAvailability()" style="margin-top: 1rem;">Submit Availability</button>
+                    <button class="btn" onclick="submitAvailability()" style="margin-top: 1rem;" aria-label="Submit your availability">Submit Availability</button>
                 </div>
 
                 <div class="month-selector">
-                    <button onclick="changeMonth(-1)">← Previous</button>
-                    <span id="currentMonth"></span>
-                    <button onclick="changeMonth(1)">Next →</button>
+                    <button onclick="changeMonth(-1)" aria-label="Previous month">← Previous</button>
+                    <span id="currentMonth" role="heading" aria-level="3"></span>
+                    <button onclick="changeMonth(1)" aria-label="Next month">Next →</button>
                 </div>
 
-                <div class="calendar" id="calendar"></div>
+                <div class="calendar" id="calendar" role="grid" aria-label="Calendar for date selection"></div>
 
                 <div class="results" id="results">
                     <h3>📅 Best Dates for Next Gathering</h3>
-                    <div id="resultsList">
+                    <div id="resultsList" role="region" aria-live="polite">
                         <p class="empty-state">No availability submitted yet. Members can select their available dates above.</p>
                     </div>
                 </div>
@@ -503,11 +566,81 @@
     </footer>
 
     <script>
+        // Configuration Constants
+        const CONFIG = {
+            MIN_MEMBERS_FOR_RESULTS: 2,
+            MAX_RESULTS_TO_SHOW: 5,
+            CALENDAR_DAYS: 42,
+            MAX_NAME_LENGTH: 50
+        };
+
         // Application State
         let currentMonth = new Date();
         let selectedDates = [];
         let currentMemberName = '';
         let memberAvailability = {};
+
+        // Utility Functions
+        function sanitizeHTML(str) {
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+
+        function validateMemberName(name) {
+            if (!name || typeof name !== 'string') {
+                return { valid: false, error: 'Please enter your name' };
+            }
+
+            const trimmedName = name.trim();
+
+            if (trimmedName.length === 0) {
+                return { valid: false, error: 'Please enter your name' };
+            }
+
+            if (trimmedName.length > CONFIG.MAX_NAME_LENGTH) {
+                return { valid: false, error: `Name must be ${CONFIG.MAX_NAME_LENGTH} characters or less` };
+            }
+
+            if (!/^[a-zA-Z\s\-'.]+$/.test(trimmedName)) {
+                return { valid: false, error: 'Name can only contain letters, spaces, hyphens, apostrophes, and periods' };
+            }
+
+            return { valid: true, name: trimmedName };
+        }
+
+        function showNotification(message, type = 'success') {
+            // Remove any existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠'
+            };
+
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-icon">${icons[type] || icons.success}</div>
+                    <div class="notification-message">${sanitizeHTML(message)}</div>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
 
         // Navigation
         document.querySelectorAll('.nav-links a').forEach(link => {
@@ -565,7 +698,7 @@
             startDate.setDate(startDate.getDate() - firstDay.getDay());
             
             // Generate calendar days
-            for (let i = 0; i < 42; i++) {
+            for (let i = 0; i < CONFIG.CALENDAR_DAYS; i++) {
                 const date = new Date(startDate);
                 date.setDate(startDate.getDate() + i);
                 
@@ -636,41 +769,47 @@
 
         function setMemberName() {
             const input = document.getElementById('memberName');
-            currentMemberName = input.value.trim();
-            
-            if (currentMemberName) {
-                alert(`Name set to: ${currentMemberName}`);
-            } else {
-                alert('Please enter your name');
+            const validation = validateMemberName(input.value);
+
+            if (!validation.valid) {
+                showNotification(validation.error, 'error');
+                return;
             }
+
+            currentMemberName = validation.name;
+            showNotification(`Name set to: ${currentMemberName}`, 'success');
         }
 
         function submitAvailability() {
             if (!currentMemberName) {
-                alert('Please enter your name first');
+                showNotification('Please enter your name first', 'error');
                 return;
             }
-            
+
             if (selectedDates.length === 0) {
-                alert('Please select at least one available date');
+                showNotification('Please select at least one available date', 'error');
                 return;
             }
-            
+
             // Store availability
             memberAvailability[currentMemberName] = [...selectedDates];
-            saveToLocalStorage();
-            
+
+            if (!saveToLocalStorage()) {
+                showNotification('Failed to save availability. Please try again.', 'error');
+                return;
+            }
+
             // Clear selection
             selectedDates = [];
             document.getElementById('memberName').value = '';
             currentMemberName = '';
-            
+
             updateSelectedDatesDisplay();
             updateResults();
             updateMembersList();
             renderCalendar();
-            
-            alert('Availability submitted successfully!');
+
+            showNotification('Availability submitted successfully!', 'success');
         }
 
         function getAvailabilityCount(dateStr) {
@@ -705,7 +844,7 @@
             // Sort by number of available members
             const sortedDates = Object.entries(dateAggregation)
                 .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
-                .filter(([date, members]) => members.length >= 2); // Only show dates with 2+ members
+                .filter(([date, members]) => members.length >= CONFIG.MIN_MEMBERS_FOR_RESULTS);
             
             if (sortedDates.length === 0) {
                 resultsDiv.innerHTML = '<p class="empty-state">No dates have multiple members available yet.</p>';
@@ -713,13 +852,14 @@
             }
             
             // Display top dates
-            resultsDiv.innerHTML = sortedDates.slice(0, 5).map(([date, members]) => {
+            resultsDiv.innerHTML = sortedDates.slice(0, CONFIG.MAX_RESULTS_TO_SHOW).map(([date, members]) => {
                 const d = new Date(date);
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const sanitizedMembers = members.map(m => sanitizeHTML(m)).join(', ');
                 return `
                     <div class="result-item">
                         <div class="result-date">${d.toLocaleDateString('en-US', options)}</div>
-                        <div class="result-members">${members.length} members available: ${members.join(', ')}</div>
+                        <div class="result-members">${members.length} members available: ${sanitizedMembers}</div>
                     </div>
                 `;
             }).join('');
@@ -734,35 +874,74 @@
                 return;
             }
             
-            membersDiv.innerHTML = members.map(member => `
-                <div class="member-item">
-                    <span class="member-name">${member}</span>
-                    <button class="remove-member" onclick="removeMember('${member}')">Remove</button>
-                </div>
-            `).join('');
+            membersDiv.innerHTML = members.map((member, index) => {
+                const sanitizedMember = sanitizeHTML(member);
+                return `
+                    <div class="member-item">
+                        <span class="member-name">${sanitizedMember}</span>
+                        <button class="remove-member" data-member-index="${index}">Remove</button>
+                    </div>
+                `;
+            }).join('');
+
+            // Add event listeners to remove buttons
+            membersDiv.querySelectorAll('.remove-member').forEach((button, index) => {
+                button.addEventListener('click', () => removeMember(members[index]));
+            });
         }
 
         function removeMember(memberName) {
-            if (confirm(`Remove ${memberName} and their availability?`)) {
-                delete memberAvailability[memberName];
-                saveToLocalStorage();
-                updateResults();
-                updateMembersList();
-                renderCalendar();
+            const sanitizedName = sanitizeHTML(memberName);
+            showNotification(`Remove ${sanitizedName} and their availability?`, 'warning');
+
+            // Create a temporary confirmation system
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = 'Confirm';
+                confirmBtn.className = 'btn';
+                confirmBtn.style.marginTop = '10px';
+                confirmBtn.style.padding = '0.5rem 1rem';
+                confirmBtn.style.fontSize = '0.9rem';
+
+                confirmBtn.onclick = () => {
+                    delete memberAvailability[memberName];
+                    if (!saveToLocalStorage()) {
+                        showNotification('Failed to save changes. Please try again.', 'error');
+                        return;
+                    }
+                    updateResults();
+                    updateMembersList();
+                    renderCalendar();
+                    showNotification(`${sanitizedName} has been removed`, 'success');
+                };
+
+                existingNotification.querySelector('.notification-content').appendChild(confirmBtn);
             }
         }
 
         function saveToLocalStorage() {
-            localStorage.setItem('puddingstoneAvailability', JSON.stringify(memberAvailability));
+            try {
+                localStorage.setItem('puddingstoneAvailability', JSON.stringify(memberAvailability));
+                return true;
+            } catch (error) {
+                console.error('Failed to save to localStorage:', error);
+                return false;
+            }
         }
 
         function loadStoredData() {
-            const stored = localStorage.getItem('puddingstoneAvailability');
-            if (stored) {
-                memberAvailability = JSON.parse(stored);
-                updateResults();
-                updateMembersList();
-                renderCalendar();
+            try {
+                const stored = localStorage.getItem('puddingstoneAvailability');
+                if (stored) {
+                    memberAvailability = JSON.parse(stored);
+                    updateResults();
+                    updateMembersList();
+                    renderCalendar();
+                }
+            } catch (error) {
+                console.error('Failed to load from localStorage:', error);
+                showNotification('Failed to load saved data. Starting fresh.', 'warning');
             }
         }
 

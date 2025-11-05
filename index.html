@@ -435,6 +435,227 @@
             border-width: 0;
         }
 
+        /* Membership Request Section */
+        .membership-request-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .request-intro {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .request-intro p {
+            margin-bottom: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .request-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .request-form-container {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .request-form-container h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .request-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .char-counter {
+            display: block;
+            text-align: right;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn-large {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Admin Section */
+        .admin-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .admin-auth {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .admin-auth h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .admin-auth p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-panel {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 8px;
+        }
+
+        .admin-panel h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .request-card {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .request-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .request-card p {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .request-card .request-message {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-style: italic;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .request-card .request-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .request-card .request-actions button {
+            flex: 1;
+        }
+
+        .btn-approve {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-approve:hover {
+            background: #246d43;
+            border-color: var(--gold-accent);
+        }
+
+        .btn-deny {
+            background: #888;
+            border-color: #666;
+        }
+
+        .btn-deny:hover {
+            background: #666;
+            border-color: var(--text-dark);
+        }
+
+        .approved-member-card {
+            background: white;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--success-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .approved-member-card .member-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .approved-member-card .member-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .request-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -556,6 +777,8 @@
                 <li><a href="#" data-section="welcome" class="active">Welcome</a></li>
                 <li><a href="#" data-section="scheduler">Event Scheduler</a></li>
                 <li><a href="#" data-section="members">Members</a></li>
+                <li><a href="#" data-section="request">Request Membership</a></li>
+                <li><a href="#" data-section="admin">Admin</a></li>
             </ul>
         </div>
     </nav>
@@ -615,6 +838,77 @@
                 </div>
             </div>
         </section>
+
+        <!-- Request Membership Section -->
+        <section id="request" class="section">
+            <h2 class="section-title">Request Membership</h2>
+            <div class="membership-request-container">
+                <div class="request-intro">
+                    <p>Interested in joining our exclusive gathering of food enthusiasts? We'd love to hear from you! Please fill out the form below to request membership in the Puddingstone Club.</p>
+                    <p>Our members will review your request and get back to you soon.</p>
+                </div>
+
+                <div class="request-form-container">
+                    <h3>⚓ Membership Application</h3>
+                    <form id="membershipRequestForm" class="request-form">
+                        <div class="form-group">
+                            <label for="requestName">Full Name *</label>
+                            <input type="text" id="requestName" name="requestName" required maxlength="50" aria-label="Your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="requestEmail">Email Address *</label>
+                            <input type="email" id="requestEmail" name="requestEmail" required maxlength="100" aria-label="Your email address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="requestPhone">Phone Number</label>
+                            <input type="tel" id="requestPhone" name="requestPhone" maxlength="20" aria-label="Your phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="requestMessage">Why would you like to join the Puddingstone Club? *</label>
+                            <textarea id="requestMessage" name="requestMessage" rows="5" required maxlength="500" aria-label="Your message"></textarea>
+                            <small class="char-counter"><span id="charCount">0</span>/500 characters</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-large">Submit Membership Request</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Section -->
+        <section id="admin" class="section">
+            <h2 class="section-title">Admin Panel</h2>
+            <div class="admin-container">
+                <div class="admin-auth" id="adminAuth">
+                    <h3>🔐 Admin Access</h3>
+                    <p>Enter the admin password to manage membership requests.</p>
+                    <div class="input-group">
+                        <input type="password" id="adminPassword" placeholder="Enter admin password" aria-label="Admin password">
+                        <button class="btn" onclick="verifyAdmin()">Login</button>
+                    </div>
+                    <small style="color: var(--text-light); margin-top: 1rem; display: block;">Default password: admin123</small>
+                </div>
+
+                <div class="admin-panel" id="adminPanel" style="display: none;">
+                    <h3>⚓ Membership Requests</h3>
+                    <div id="pendingRequests">
+                        <p class="empty-state">No pending membership requests.</p>
+                    </div>
+
+                    <div class="admin-actions" style="margin-top: 2rem;">
+                        <h3>⚓ Approved Members</h3>
+                        <div id="approvedMembers">
+                            <p class="empty-state">No approved members yet.</p>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="logoutAdmin()" style="margin-top: 2rem;">Logout</button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -630,7 +924,8 @@
             MIN_MEMBERS_FOR_RESULTS: 2,
             MAX_RESULTS_TO_SHOW: 5,
             CALENDAR_DAYS: 42,
-            MAX_NAME_LENGTH: 50
+            MAX_NAME_LENGTH: 50,
+            ADMIN_PASSWORD: 'admin123'
         };
 
         // Application State
@@ -638,6 +933,9 @@
         let selectedDates = [];
         let currentMemberName = '';
         let memberAvailability = {};
+        let membershipRequests = [];
+        let approvedMembers = [];
+        let isAdminLoggedIn = false;
 
         // Utility Functions
         function sanitizeHTML(str) {
@@ -1004,8 +1302,293 @@
             }
         }
 
+        // Membership Request Functions
+        function initMembershipForm() {
+            const form = document.getElementById('membershipRequestForm');
+            const messageField = document.getElementById('requestMessage');
+            const charCount = document.getElementById('charCount');
+
+            // Character counter
+            if (messageField) {
+                messageField.addEventListener('input', () => {
+                    charCount.textContent = messageField.value.length;
+                });
+            }
+
+            // Form submission
+            if (form) {
+                form.addEventListener('submit', handleMembershipRequest);
+            }
+        }
+
+        function handleMembershipRequest(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('requestName').value.trim();
+            const email = document.getElementById('requestEmail').value.trim();
+            const phone = document.getElementById('requestPhone').value.trim();
+            const message = document.getElementById('requestMessage').value.trim();
+
+            // Validate name
+            const nameValidation = validateMemberName(name);
+            if (!nameValidation.valid) {
+                showNotification(nameValidation.error, 'error');
+                return;
+            }
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+
+            // Check for duplicate requests
+            const existingRequest = membershipRequests.find(req =>
+                req.email.toLowerCase() === email.toLowerCase() ||
+                req.name.toLowerCase() === nameValidation.name.toLowerCase()
+            );
+
+            if (existingRequest) {
+                showNotification('A membership request already exists for this name or email', 'warning');
+                return;
+            }
+
+            // Create request object
+            const request = {
+                id: Date.now(),
+                name: nameValidation.name,
+                email: email,
+                phone: phone,
+                message: message,
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            // Add to requests array
+            membershipRequests.push(request);
+
+            // Save to localStorage
+            if (!saveMembershipData()) {
+                showNotification('Failed to submit request. Please try again.', 'error');
+                return;
+            }
+
+            // Clear form
+            document.getElementById('membershipRequestForm').reset();
+            document.getElementById('charCount').textContent = '0';
+
+            // Show success message
+            showNotification('Membership request submitted successfully! We will review your application soon.', 'success');
+        }
+
+        // Admin Functions
+        function verifyAdmin() {
+            const password = document.getElementById('adminPassword').value;
+
+            if (password === CONFIG.ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                document.getElementById('adminAuth').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAdminData();
+                showNotification('Admin login successful', 'success');
+            } else {
+                showNotification('Incorrect password', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('adminAuth').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            showNotification('Logged out successfully', 'success');
+        }
+
+        function loadAdminData() {
+            displayPendingRequests();
+            displayApprovedMembers();
+        }
+
+        function displayPendingRequests() {
+            const container = document.getElementById('pendingRequests');
+            const pendingRequests = membershipRequests.filter(req => req.status === 'pending');
+
+            if (pendingRequests.length === 0) {
+                container.innerHTML = '<p class="empty-state">No pending membership requests.</p>';
+                return;
+            }
+
+            container.innerHTML = pendingRequests.map(request => {
+                const date = new Date(request.timestamp);
+                const sanitizedName = sanitizeHTML(request.name);
+                const sanitizedEmail = sanitizeHTML(request.email);
+                const sanitizedPhone = sanitizeHTML(request.phone || 'Not provided');
+                const sanitizedMessage = sanitizeHTML(request.message);
+
+                return `
+                    <div class="request-card">
+                        <h4>${sanitizedName}</h4>
+                        <p><strong>Email:</strong> ${sanitizedEmail}</p>
+                        <p><strong>Phone:</strong> ${sanitizedPhone}</p>
+                        <div class="request-message">
+                            <strong>Message:</strong><br>
+                            ${sanitizedMessage}
+                        </div>
+                        <div class="request-meta">
+                            Submitted: ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn btn-approve" onclick="approveRequest(${request.id})">✓ Approve</button>
+                            <button class="btn btn-deny" onclick="denyRequest(${request.id})">✕ Deny</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayApprovedMembers() {
+            const container = document.getElementById('approvedMembers');
+
+            if (approvedMembers.length === 0) {
+                container.innerHTML = '<p class="empty-state">No approved members yet.</p>';
+                return;
+            }
+
+            container.innerHTML = approvedMembers.map(member => {
+                const date = new Date(member.approvedDate);
+                const sanitizedName = sanitizeHTML(member.name);
+                const sanitizedEmail = sanitizeHTML(member.email);
+
+                return `
+                    <div class="approved-member-card">
+                        <div class="member-info">
+                            <h4>${sanitizedName}</h4>
+                            <p>${sanitizedEmail} • Approved ${date.toLocaleDateString()}</p>
+                        </div>
+                        <button class="btn remove-member" onclick="removeApprovedMember(${member.id})">Remove</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function approveRequest(requestId) {
+            const request = membershipRequests.find(req => req.id === requestId);
+            if (!request) return;
+
+            // Update request status
+            request.status = 'approved';
+
+            // Add to approved members
+            const approvedMember = {
+                id: request.id,
+                name: request.name,
+                email: request.email,
+                phone: request.phone,
+                approvedDate: new Date().toISOString()
+            };
+            approvedMembers.push(approvedMember);
+
+            // Save changes
+            if (!saveMembershipData()) {
+                showNotification('Failed to approve request', 'error');
+                return;
+            }
+
+            // Refresh displays
+            loadAdminData();
+            showNotification(`${request.name} has been approved!`, 'success');
+        }
+
+        function denyRequest(requestId) {
+            const request = membershipRequests.find(req => req.id === requestId);
+            if (!request) return;
+
+            // Remove from requests
+            membershipRequests = membershipRequests.filter(req => req.id !== requestId);
+
+            // Save changes
+            if (!saveMembershipData()) {
+                showNotification('Failed to deny request', 'error');
+                return;
+            }
+
+            // Refresh display
+            loadAdminData();
+            showNotification(`Request from ${request.name} has been denied`, 'success');
+        }
+
+        function removeApprovedMember(memberId) {
+            const member = approvedMembers.find(m => m.id === memberId);
+            if (!member) return;
+
+            const sanitizedName = sanitizeHTML(member.name);
+            showNotification(`Remove ${sanitizedName} from approved members?`, 'warning');
+
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = 'Confirm';
+                confirmBtn.className = 'btn';
+                confirmBtn.style.marginTop = '10px';
+                confirmBtn.style.padding = '0.5rem 1rem';
+                confirmBtn.style.fontSize = '0.9rem';
+
+                confirmBtn.onclick = () => {
+                    // Remove from approved members
+                    approvedMembers = approvedMembers.filter(m => m.id !== memberId);
+
+                    // Remove from requests
+                    membershipRequests = membershipRequests.filter(req => req.id !== memberId);
+
+                    if (!saveMembershipData()) {
+                        showNotification('Failed to remove member', 'error');
+                        return;
+                    }
+
+                    loadAdminData();
+                    showNotification(`${sanitizedName} has been removed`, 'success');
+                };
+
+                existingNotification.querySelector('.notification-content').appendChild(confirmBtn);
+            }
+        }
+
+        function saveMembershipData() {
+            try {
+                localStorage.setItem('puddingstoneMembershipRequests', JSON.stringify(membershipRequests));
+                localStorage.setItem('puddingstoneApprovedMembers', JSON.stringify(approvedMembers));
+                return true;
+            } catch (error) {
+                console.error('Failed to save membership data:', error);
+                return false;
+            }
+        }
+
+        function loadMembershipData() {
+            try {
+                const storedRequests = localStorage.getItem('puddingstoneMembershipRequests');
+                const storedApproved = localStorage.getItem('puddingstoneApprovedMembers');
+
+                if (storedRequests) {
+                    membershipRequests = JSON.parse(storedRequests);
+                }
+
+                if (storedApproved) {
+                    approvedMembers = JSON.parse(storedApproved);
+                }
+            } catch (error) {
+                console.error('Failed to load membership data:', error);
+                showNotification('Failed to load membership data', 'warning');
+            }
+        }
+
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', initCalendar);
+        document.addEventListener('DOMContentLoaded', () => {
+            initCalendar();
+            initMembershipForm();
+            loadMembershipData();
+        });
     </script>
 </body>
 </html>

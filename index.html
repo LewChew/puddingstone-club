@@ -1095,7 +1095,8 @@
             <h2 class="section-title">Propose an Event</h2>
             <div class="scheduler-container">
                 <div class="event-proposal-intro">
-                    <p>Have an idea for our next gathering? Throw out a date and theme! Your proposal will be shared with all members who can then RSVP or suggest alternative dates.</p>
+                    <p><strong>Members Only:</strong> Only approved club members can propose events. Your proposal will be shared with all members who can then RSVP or suggest alternative dates.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Not a member yet? <a href="#" onclick="document.querySelector('[data-section=request]').click(); return false;" style="color: var(--accent-color); text-decoration: underline;">Request membership here</a>.</p>
                 </div>
 
                 <div class="event-proposal-form-container">
@@ -1369,6 +1370,19 @@
                 return;
             }
 
+            // Check if proposer is an approved member
+            const isMember = approvedMembers.some(member =>
+                member.name.toLowerCase() === nameValidation.name.toLowerCase()
+            );
+
+            if (!isMember) {
+                showNotification(
+                    `Only approved members can propose events. "${nameValidation.name}" is not in our approved members list. Please request membership first.`,
+                    'error'
+                );
+                return;
+            }
+
             // Create event object
             const event = {
                 id: Date.now(),
@@ -1554,6 +1568,19 @@
                 return;
             }
 
+            // Check if user is an approved member
+            const isMember = approvedMembers.some(member =>
+                member.name.toLowerCase() === nameValidation.name.toLowerCase()
+            );
+
+            if (!isMember) {
+                showNotification(
+                    `Only approved members can RSVP to events. "${nameValidation.name}" is not in our approved members list.`,
+                    'error'
+                );
+                return;
+            }
+
             const event = proposedEvents.find(e => e.id === eventId);
             if (!event) return;
 
@@ -1596,6 +1623,19 @@
             const nameValidation = validateMemberName(name);
             if (!nameValidation.valid) {
                 showNotification(nameValidation.error, 'error');
+                return;
+            }
+
+            // Check if user is an approved member
+            const isMember = approvedMembers.some(member =>
+                member.name.toLowerCase() === nameValidation.name.toLowerCase()
+            );
+
+            if (!isMember) {
+                showNotification(
+                    `Only approved members can propose alternative dates. "${nameValidation.name}" is not in our approved members list.`,
+                    'error'
+                );
                 return;
             }
 

@@ -435,6 +435,302 @@
             border-width: 0;
         }
 
+        /* Event Proposal Section */
+        .event-proposal-intro {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--secondary-color);
+            text-align: center;
+        }
+
+        .event-proposal-intro p {
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .event-proposal-form-container {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .event-proposal-form-container h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .event-proposal-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .proposed-events-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .proposed-events-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .event-card {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .event-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .event-card-header h4 {
+            color: var(--primary-color);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.3rem;
+        }
+
+        .event-proposer {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .event-status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .event-status-badge.confirmed {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .event-status-badge.pending {
+            background: var(--gold-accent);
+            color: white;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 5px;
+        }
+
+        .event-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-detail-item strong {
+            color: var(--primary-color);
+        }
+
+        .event-ideas {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .event-ideas p {
+            margin: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .event-rsvp-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .event-rsvp-section h5 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .rsvp-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .rsvp-actions button {
+            flex: 1;
+        }
+
+        .btn-attending {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-attending:hover {
+            background: #246d43;
+            border-color: var(--gold-accent);
+        }
+
+        .btn-maybe {
+            background: var(--gold-accent);
+            border-color: var(--gold-accent);
+        }
+
+        .btn-maybe:hover {
+            background: #b8860b;
+            border-color: var(--primary-color);
+        }
+
+        .btn-cant-attend {
+            background: #888;
+            border-color: #666;
+        }
+
+        .btn-cant-attend:hover {
+            background: #666;
+        }
+
+        .attendee-list {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .attendee-list h6 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .attendee-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .attendee-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            background: var(--success-color);
+            color: white;
+        }
+
+        .attendee-tag.maybe {
+            background: var(--gold-accent);
+        }
+
+        .counter-proposal-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--hover-color);
+            border-radius: 5px;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .counter-proposal-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .counter-proposal-form input {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .counter-proposal-list {
+            margin-top: 1rem;
+        }
+
+        .counter-proposal-item {
+            padding: 0.75rem;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .email-helper-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--hover-color);
+            border-radius: 5px;
+            border: 2px dashed var(--secondary-color);
+        }
+
+        .email-helper-section p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .email-list-display {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+            border: 1px solid var(--border-color);
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .counter-proposal-form {
+                grid-template-columns: 1fr;
+            }
+
+            .event-details {
+                grid-template-columns: 1fr;
+            }
+
+            .rsvp-actions {
+                flex-direction: column;
+            }
+        }
+
         /* Membership Request Section */
         .membership-request-container {
             background: white;
@@ -796,33 +1092,51 @@
 
         <!-- Scheduler Section -->
         <section id="scheduler" class="section">
-            <h2 class="section-title">Event Scheduler</h2>
+            <h2 class="section-title">Propose an Event</h2>
             <div class="scheduler-container">
-                <div class="member-input">
-                    <h3>Submit Your Availability</h3>
-                    <div class="input-group">
-                        <label for="memberName" class="sr-only">Your Name</label>
-                        <input type="text" id="memberName" placeholder="Enter your name" aria-label="Your name" autocomplete="name" maxlength="50">
-                        <button class="btn" onclick="setMemberName()" aria-label="Set your name">Set Name</button>
-                    </div>
-                    <div class="selected-dates" id="selectedDates" role="status" aria-live="polite">
-                        <span class="empty-state">Click on calendar dates to select your available days</span>
-                    </div>
-                    <button class="btn" onclick="submitAvailability()" style="margin-top: 1rem;" aria-label="Submit your availability">Submit Availability</button>
+                <div class="event-proposal-intro">
+                    <p>Have an idea for our next gathering? Throw out a date and theme! Your proposal will be shared with all members who can then RSVP or suggest alternative dates.</p>
                 </div>
 
-                <div class="month-selector">
-                    <button onclick="changeMonth(-1)" aria-label="Previous month">← Previous</button>
-                    <span id="currentMonth" role="heading" aria-level="3"></span>
-                    <button onclick="changeMonth(1)" aria-label="Next month">Next →</button>
+                <div class="event-proposal-form-container">
+                    <h3>⚓ Create Event Proposal</h3>
+                    <form id="eventProposalForm" class="event-proposal-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="proposerName">Your Name *</label>
+                                <input type="text" id="proposerName" name="proposerName" required maxlength="50" aria-label="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventDate">Proposed Date *</label>
+                                <input type="date" id="eventDate" name="eventDate" required aria-label="Event date">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventTime">Proposed Time *</label>
+                                <input type="time" id="eventTime" name="eventTime" required aria-label="Event time">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventLocation">Location</label>
+                                <input type="text" id="eventLocation" name="eventLocation" maxlength="100" placeholder="e.g., My house, Restaurant name" aria-label="Event location">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventIdeas">Event Ideas/Theme *</label>
+                            <textarea id="eventIdeas" name="eventIdeas" rows="4" required maxlength="300" placeholder="Describe your ideas for this gathering (cuisine, theme, activity, etc.)" aria-label="Event ideas"></textarea>
+                            <small class="char-counter"><span id="eventCharCount">0</span>/300 characters</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-large">Propose Event & Notify Members</button>
+                    </form>
                 </div>
 
-                <div class="calendar" id="calendar" role="grid" aria-label="Calendar for date selection"></div>
-
-                <div class="results" id="results">
-                    <h3>⚓ Best Dates for Next Gathering ⚓</h3>
-                    <div id="resultsList" role="region" aria-live="polite">
-                        <p class="empty-state">No availability submitted yet. Members can select their available dates above.</p>
+                <div class="proposed-events-section">
+                    <h3>⚓ Proposed Events</h3>
+                    <div id="proposedEventsList">
+                        <p class="empty-state">No events proposed yet. Be the first to suggest a gathering!</p>
                     </div>
                 </div>
             </div>
@@ -832,9 +1146,9 @@
         <section id="members" class="section">
             <h2 class="section-title">Club Members</h2>
             <div class="member-list">
-                <h3>Current Members</h3>
-                <div id="membersList">
-                    <p class="empty-state">No members have submitted availability yet.</p>
+                <h3>⚓ Approved Members</h3>
+                <div id="membersListDisplay">
+                    <p class="empty-state">No approved members yet.</p>
                 </div>
             </div>
         </section>
@@ -929,13 +1243,11 @@
         };
 
         // Application State
-        let currentMonth = new Date();
-        let selectedDates = [];
-        let currentMemberName = '';
-        let memberAvailability = {};
         let membershipRequests = [];
         let approvedMembers = [];
         let isAdminLoggedIn = false;
+        let proposedEvents = [];
+        let currentUserName = '';
 
         // Utility Functions
         function sanitizeHTML(str) {
@@ -1015,291 +1327,403 @@
             });
         });
 
-        // Calendar Functions
-        function initCalendar() {
-            updateMonthDisplay();
-            renderCalendar();
-            loadStoredData();
-        }
+        // Event Proposal Functions
+        function initEventProposalForm() {
+            const form = document.getElementById('eventProposalForm');
+            const ideasField = document.getElementById('eventIdeas');
+            const charCount = document.getElementById('eventCharCount');
 
-        function updateMonthDisplay() {
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                              'July', 'August', 'September', 'October', 'November', 'December'];
-            document.getElementById('currentMonth').textContent = 
-                `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
-        }
-
-        function changeMonth(direction) {
-            currentMonth.setMonth(currentMonth.getMonth() + direction);
-            updateMonthDisplay();
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-            
-            // Add day headers
-            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            dayHeaders.forEach(day => {
-                const header = document.createElement('div');
-                header.className = 'calendar-header';
-                header.textContent = day;
-                calendar.appendChild(header);
-            });
-            
-            // Get first day of month
-            const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-            const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - firstDay.getDay());
-            
-            // Generate calendar days
-            for (let i = 0; i < CONFIG.CALENDAR_DAYS; i++) {
-                const date = new Date(startDate);
-                date.setDate(startDate.getDate() + i);
-                
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'calendar-day';
-                
-                if (date.getMonth() !== currentMonth.getMonth()) {
-                    dayDiv.classList.add('other-month');
-                } else {
-                    dayDiv.onclick = () => toggleDate(date);
-                    
-                    // Check if date is selected
-                    const dateStr = formatDate(date);
-                    if (selectedDates.includes(dateStr)) {
-                        dayDiv.classList.add('selected');
-                    }
-                    
-                    // Add availability count
-                    const availCount = getAvailabilityCount(dateStr);
-                    if (availCount > 0) {
-                        const countSpan = document.createElement('div');
-                        countSpan.className = 'availability-count';
-                        countSpan.textContent = `${availCount} available`;
-                        dayDiv.appendChild(countSpan);
-                    }
-                }
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = date.getDate();
-                dayDiv.insertBefore(dayNumber, dayDiv.firstChild);
-                
-                calendar.appendChild(dayDiv);
-            }
-        }
-
-        function formatDate(date) {
-            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        }
-
-        function toggleDate(date) {
-            const dateStr = formatDate(date);
-            const index = selectedDates.indexOf(dateStr);
-            
-            if (index === -1) {
-                selectedDates.push(dateStr);
-            } else {
-                selectedDates.splice(index, 1);
-            }
-            
-            renderCalendar();
-            updateSelectedDatesDisplay();
-        }
-
-        function updateSelectedDatesDisplay() {
-            const container = document.getElementById('selectedDates');
-            
-            if (selectedDates.length === 0) {
-                container.innerHTML = '<span class="empty-state">Click on calendar dates to select your available days</span>';
-            } else {
-                container.innerHTML = selectedDates.sort().map(date => {
-                    const d = new Date(date);
-                    const options = { weekday: 'short', month: 'short', day: 'numeric' };
-                    return `<span class="selected-date-tag">${d.toLocaleDateString('en-US', options)}</span>`;
-                }).join('');
-            }
-        }
-
-        function setMemberName() {
-            const input = document.getElementById('memberName');
-            const validation = validateMemberName(input.value);
-
-            if (!validation.valid) {
-                showNotification(validation.error, 'error');
-                return;
-            }
-
-            currentMemberName = validation.name;
-            showNotification(`Name set to: ${currentMemberName}`, 'success');
-        }
-
-        function submitAvailability() {
-            if (!currentMemberName) {
-                showNotification('Please enter your name first', 'error');
-                return;
-            }
-
-            if (selectedDates.length === 0) {
-                showNotification('Please select at least one available date', 'error');
-                return;
-            }
-
-            // Store availability
-            memberAvailability[currentMemberName] = [...selectedDates];
-
-            if (!saveToLocalStorage()) {
-                showNotification('Failed to save availability. Please try again.', 'error');
-                return;
-            }
-
-            // Clear selection
-            selectedDates = [];
-            document.getElementById('memberName').value = '';
-            currentMemberName = '';
-
-            updateSelectedDatesDisplay();
-            updateResults();
-            updateMembersList();
-            renderCalendar();
-
-            showNotification('Availability submitted successfully!', 'success');
-        }
-
-        function getAvailabilityCount(dateStr) {
-            let count = 0;
-            for (const member in memberAvailability) {
-                if (memberAvailability[member].includes(dateStr)) {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        function updateResults() {
-            const resultsDiv = document.getElementById('resultsList');
-            
-            if (Object.keys(memberAvailability).length === 0) {
-                resultsDiv.innerHTML = '<p class="empty-state">No availability submitted yet. Members can select their available dates above.</p>';
-                return;
-            }
-            
-            // Aggregate availability
-            const dateAggregation = {};
-            for (const member in memberAvailability) {
-                memberAvailability[member].forEach(date => {
-                    if (!dateAggregation[date]) {
-                        dateAggregation[date] = [];
-                    }
-                    dateAggregation[date].push(member);
+            // Character counter
+            if (ideasField) {
+                ideasField.addEventListener('input', () => {
+                    charCount.textContent = ideasField.value.length;
                 });
             }
-            
-            // Sort by number of available members
-            const sortedDates = Object.entries(dateAggregation)
-                .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))
-                .filter(([date, members]) => members.length >= CONFIG.MIN_MEMBERS_FOR_RESULTS);
-            
-            if (sortedDates.length === 0) {
-                resultsDiv.innerHTML = '<p class="empty-state">No dates have multiple members available yet.</p>';
-                return;
+
+            // Form submission
+            if (form) {
+                form.addEventListener('submit', handleEventProposal);
             }
-            
-            // Display top dates
-            resultsDiv.innerHTML = sortedDates.slice(0, CONFIG.MAX_RESULTS_TO_SHOW).map(([date, members]) => {
-                const d = new Date(date);
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const sanitizedMembers = members.map(m => sanitizeHTML(m)).join(', ');
-                return `
-                    <div class="result-item">
-                        <div class="result-date">${d.toLocaleDateString('en-US', options)}</div>
-                        <div class="result-members">${members.length} members available: ${sanitizedMembers}</div>
-                    </div>
-                `;
-            }).join('');
+
+            // Set minimum date to today
+            const dateInput = document.getElementById('eventDate');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.setAttribute('min', today);
+            }
         }
 
-        function updateMembersList() {
-            const membersDiv = document.getElementById('membersList');
-            const members = Object.keys(memberAvailability);
-            
-            if (members.length === 0) {
-                membersDiv.innerHTML = '<p class="empty-state">No members have submitted availability yet.</p>';
+        function handleEventProposal(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('proposerName').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const location = document.getElementById('eventLocation').value.trim();
+            const ideas = document.getElementById('eventIdeas').value.trim();
+
+            // Validate name
+            const nameValidation = validateMemberName(name);
+            if (!nameValidation.valid) {
+                showNotification(nameValidation.error, 'error');
                 return;
             }
-            
-            membersDiv.innerHTML = members.map((member, index) => {
-                const sanitizedMember = sanitizeHTML(member);
-                return `
-                    <div class="member-item">
-                        <span class="member-name">${sanitizedMember}</span>
-                        <button class="remove-member" data-member-index="${index}">Remove</button>
-                    </div>
-                `;
-            }).join('');
 
-            // Add event listeners to remove buttons
-            membersDiv.querySelectorAll('.remove-member').forEach((button, index) => {
-                button.addEventListener('click', () => removeMember(members[index]));
+            // Create event object
+            const event = {
+                id: Date.now(),
+                proposer: nameValidation.name,
+                date: date,
+                time: time,
+                location: location || 'TBD',
+                ideas: ideas,
+                timestamp: new Date().toISOString(),
+                attendees: [],
+                counterProposals: []
+            };
+
+            // Add to events array
+            proposedEvents.push(event);
+
+            // Save to localStorage
+            if (!saveEventsData()) {
+                showNotification('Failed to propose event. Please try again.', 'error');
+                return;
+            }
+
+            // Clear form
+            document.getElementById('eventProposalForm').reset();
+            document.getElementById('eventCharCount').textContent = '0';
+
+            // Refresh display
+            displayProposedEvents();
+
+            // Show success with email helper
+            showNotification('Event proposed successfully! Check below for notification details.', 'success');
+
+            // Show email notification helper
+            showEmailNotificationHelper(event);
+        }
+
+        function displayProposedEvents() {
+            const container = document.getElementById('proposedEventsList');
+
+            if (proposedEvents.length === 0) {
+                container.innerHTML = '<p class="empty-state">No events proposed yet. Be the first to suggest a gathering!</p>';
+                return;
+            }
+
+            // Sort by date (newest first)
+            const sortedEvents = [...proposedEvents].sort((a, b) =>
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+
+            container.innerHTML = sortedEvents.map(event => renderEventCard(event)).join('');
+        }
+
+        function renderEventCard(event) {
+            const eventDate = new Date(event.date + 'T' + event.time);
+            const dateStr = eventDate.toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
+
+            const sanitizedProposer = sanitizeHTML(event.proposer);
+            const sanitizedLocation = sanitizeHTML(event.location);
+            const sanitizedIdeas = sanitizeHTML(event.ideas);
+
+            const attending = event.attendees.filter(a => a.status === 'attending');
+            const maybe = event.attendees.filter(a => a.status === 'maybe');
+
+            return `
+                <div class="event-card">
+                    <div class="event-card-header">
+                        <div>
+                            <h4>${dateStr} at ${event.time}</h4>
+                            <p class="event-proposer">Proposed by ${sanitizedProposer}</p>
+                        </div>
+                        <span class="event-status-badge ${attending.length >= 3 ? 'confirmed' : 'pending'}">
+                            ${attending.length >= 3 ? 'Looking Good!' : 'Pending'}
+                        </span>
+                    </div>
+
+                    <div class="event-details">
+                        <div class="event-detail-item">
+                            <strong>📍 Location:</strong> ${sanitizedLocation}
+                        </div>
+                        <div class="event-detail-item">
+                            <strong>👥 Attending:</strong> ${attending.length}
+                        </div>
+                        <div class="event-detail-item">
+                            <strong>❓ Maybe:</strong> ${maybe.length}
+                        </div>
+                    </div>
+
+                    <div class="event-ideas">
+                        <strong>Event Ideas:</strong>
+                        <p>${sanitizedIdeas}</p>
+                    </div>
+
+                    <div class="event-rsvp-section">
+                        <h5>Your RSVP:</h5>
+                        <div class="rsvp-actions">
+                            <button class="btn btn-attending" onclick="rsvpToEvent(${event.id}, 'attending')">
+                                ✓ I'll Be There
+                            </button>
+                            <button class="btn btn-maybe" onclick="rsvpToEvent(${event.id}, 'maybe')">
+                                ❓ Maybe
+                            </button>
+                            <button class="btn btn-cant-attend" onclick="rsvpToEvent(${event.id}, 'cant-attend')">
+                                ✕ Can't Make It
+                            </button>
+                        </div>
+
+                        ${renderAttendeeList(event)}
+                        ${renderCounterProposalSection(event)}
+                    </div>
+                </div>
+            `;
         }
 
-        function removeMember(memberName) {
-            const sanitizedName = sanitizeHTML(memberName);
-            showNotification(`Remove ${sanitizedName} and their availability?`, 'warning');
+        function renderAttendeeList(event) {
+            const attending = event.attendees.filter(a => a.status === 'attending');
+            const maybe = event.attendees.filter(a => a.status === 'maybe');
 
-            // Create a temporary confirmation system
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                const confirmBtn = document.createElement('button');
-                confirmBtn.textContent = 'Confirm';
-                confirmBtn.className = 'btn';
-                confirmBtn.style.marginTop = '10px';
-                confirmBtn.style.padding = '0.5rem 1rem';
-                confirmBtn.style.fontSize = '0.9rem';
-
-                confirmBtn.onclick = () => {
-                    delete memberAvailability[memberName];
-                    if (!saveToLocalStorage()) {
-                        showNotification('Failed to save changes. Please try again.', 'error');
-                        return;
-                    }
-                    updateResults();
-                    updateMembersList();
-                    renderCalendar();
-                    showNotification(`${sanitizedName} has been removed`, 'success');
-                };
-
-                existingNotification.querySelector('.notification-content').appendChild(confirmBtn);
+            if (attending.length === 0 && maybe.length === 0) {
+                return '<p style="color: var(--text-light); font-style: italic; margin-top: 1rem;">No RSVPs yet.</p>';
             }
+
+            let html = '<div class="attendee-list">';
+
+            if (attending.length > 0) {
+                html += '<h6>Attending:</h6><div class="attendee-tags">';
+                html += attending.map(a => `<span class="attendee-tag">${sanitizeHTML(a.name)}</span>`).join('');
+                html += '</div>';
+            }
+
+            if (maybe.length > 0) {
+                html += '<h6 style="margin-top: 0.75rem;">Maybe:</h6><div class="attendee-tags">';
+                html += maybe.map(a => `<span class="attendee-tag maybe">${sanitizeHTML(a.name)}</span>`).join('');
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
         }
 
-        function saveToLocalStorage() {
+        function renderCounterProposalSection(event) {
+            return `
+                <div class="counter-proposal-section">
+                    <h6 style="color: var(--primary-color); margin-bottom: 0.5rem;">Propose Alternative Date/Time:</h6>
+                    <form class="counter-proposal-form" onsubmit="submitCounterProposal(event, ${event.id})">
+                        <input type="text" placeholder="Your name" required maxlength="50">
+                        <input type="date" required min="${new Date().toISOString().split('T')[0]}">
+                        <input type="time" required>
+                        <button type="submit" class="btn" style="grid-column: span 3;">Suggest Alternative</button>
+                    </form>
+                    ${event.counterProposals.length > 0 ? renderCounterProposals(event.counterProposals) : ''}
+                </div>
+            `;
+        }
+
+        function renderCounterProposals(proposals) {
+            let html = '<div class="counter-proposal-list">';
+            html += '<h6 style="color: var(--primary-color); margin-top: 1rem; margin-bottom: 0.5rem;">Alternative Suggestions:</h6>';
+            proposals.forEach(p => {
+                const date = new Date(p.date + 'T' + p.time);
+                const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                html += `
+                    <div class="counter-proposal-item">
+                        <strong>${sanitizeHTML(p.name)}</strong> suggests: ${dateStr} at ${p.time}
+                    </div>
+                `;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function rsvpToEvent(eventId, status) {
+            const userName = prompt('Enter your name:');
+            if (!userName || userName.trim() === '') {
+                showNotification('Please enter your name to RSVP', 'error');
+                return;
+            }
+
+            const nameValidation = validateMemberName(userName);
+            if (!nameValidation.valid) {
+                showNotification(nameValidation.error, 'error');
+                return;
+            }
+
+            const event = proposedEvents.find(e => e.id === eventId);
+            if (!event) return;
+
+            // Remove previous RSVP from this user if exists
+            event.attendees = event.attendees.filter(a => a.name.toLowerCase() !== nameValidation.name.toLowerCase());
+
+            // Add new RSVP if not "can't attend"
+            if (status !== 'cant-attend') {
+                event.attendees.push({
+                    name: nameValidation.name,
+                    status: status,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            if (!saveEventsData()) {
+                showNotification('Failed to save RSVP', 'error');
+                return;
+            }
+
+            displayProposedEvents();
+
+            const statusMessages = {
+                'attending': `Great! ${nameValidation.name} is attending!`,
+                'maybe': `${nameValidation.name} marked as maybe`,
+                'cant-attend': `RSVP removed for ${nameValidation.name}`
+            };
+
+            showNotification(statusMessages[status] || 'RSVP updated', 'success');
+        }
+
+        function submitCounterProposal(e, eventId) {
+            e.preventDefault();
+
+            const form = e.target;
+            const name = form.elements[0].value.trim();
+            const date = form.elements[1].value;
+            const time = form.elements[2].value;
+
+            const nameValidation = validateMemberName(name);
+            if (!nameValidation.valid) {
+                showNotification(nameValidation.error, 'error');
+                return;
+            }
+
+            const event = proposedEvents.find(ev => ev.id === eventId);
+            if (!event) return;
+
+            event.counterProposals.push({
+                name: nameValidation.name,
+                date: date,
+                time: time,
+                timestamp: new Date().toISOString()
+            });
+
+            if (!saveEventsData()) {
+                showNotification('Failed to save counter-proposal', 'error');
+                return;
+            }
+
+            displayProposedEvents();
+            showNotification(`Alternative date proposed by ${nameValidation.name}!`, 'success');
+        }
+
+        function showEmailNotificationHelper(event) {
+            // Get all approved members emails
+            const emailList = approvedMembers.map(m => m.email).join(', ');
+
+            const eventDate = new Date(event.date + 'T' + event.time);
+            const dateStr = eventDate.toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            const emailSubject = `Puddingstone Club Event Proposal: ${dateStr}`;
+            const emailBody = `Hi everyone,\n\n${event.proposer} has proposed a new gathering!\n\nDate: ${dateStr}\nTime: ${event.time}\nLocation: ${event.location}\n\nIdeas: ${event.ideas}\n\nPlease visit the Puddingstone Club website to RSVP!\n\nCheers,\nPuddingstone Club`;
+
+            // Create temporary notification with email helper
+            setTimeout(() => {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.style.maxWidth = '600px';
+
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <div style="width: 100%;">
+                            <div class="notification-icon">📧</div>
+                            <div style="margin-top: 1rem;">
+                                <strong>Email Notification Helper</strong>
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Copy the email list and message below to notify members:</p>
+
+                                <div style="margin-top: 1rem;">
+                                    <label style="font-size: 0.85rem; color: var(--text-light);">To:</label>
+                                    <div class="email-list-display">${emailList || 'No approved members yet'}</div>
+                                    <button class="btn" onclick="navigator.clipboard.writeText('${emailList}')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.25rem;">
+                                        Copy Emails
+                                    </button>
+                                </div>
+
+                                <div style="margin-top: 1rem;">
+                                    <label style="font-size: 0.85rem; color: var(--text-light);">Subject:</label>
+                                    <div class="email-list-display">${emailSubject}</div>
+                                </div>
+
+                                <div style="margin-top: 1rem;">
+                                    <label style="font-size: 0.85rem; color: var(--text-light);">Message:</label>
+                                    <div class="email-list-display" style="white-space: pre-wrap; font-family: inherit;">${emailBody}</div>
+                                    <button class="btn" onclick="navigator.clipboard.writeText(\`${emailBody.replace(/`/g, '\\`')}\`)" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.25rem;">
+                                        Copy Message
+                                    </button>
+                                </div>
+
+                                <button class="btn" onclick="this.closest('.notification').remove()" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(notification);
+            }, 500);
+        }
+
+        function saveEventsData() {
             try {
-                localStorage.setItem('puddingstoneAvailability', JSON.stringify(memberAvailability));
+                localStorage.setItem('puddingstoneEvents', JSON.stringify(proposedEvents));
                 return true;
             } catch (error) {
-                console.error('Failed to save to localStorage:', error);
+                console.error('Failed to save events data:', error);
                 return false;
             }
         }
 
-        function loadStoredData() {
+        function loadEventsData() {
             try {
-                const stored = localStorage.getItem('puddingstoneAvailability');
+                const stored = localStorage.getItem('puddingstoneEvents');
                 if (stored) {
-                    memberAvailability = JSON.parse(stored);
-                    updateResults();
-                    updateMembersList();
-                    renderCalendar();
+                    proposedEvents = JSON.parse(stored);
+                    displayProposedEvents();
                 }
             } catch (error) {
-                console.error('Failed to load from localStorage:', error);
-                showNotification('Failed to load saved data. Starting fresh.', 'warning');
+                console.error('Failed to load events data:', error);
+                showNotification('Failed to load events data', 'warning');
             }
+        }
+
+        function updateMembersListDisplay() {
+            const container = document.getElementById('membersListDisplay');
+
+            if (!container) return;
+
+            if (approvedMembers.length === 0) {
+                container.innerHTML = '<p class="empty-state">No approved members yet.</p>';
+                return;
+            }
+
+            container.innerHTML = approvedMembers.map(member => {
+                const date = new Date(member.approvedDate);
+                const sanitizedName = sanitizeHTML(member.name);
+                const sanitizedEmail = sanitizeHTML(member.email);
+
+                return `
+                    <div class="member-item">
+                        <div>
+                            <span class="member-name">${sanitizedName}</span>
+                            <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">${sanitizedEmail}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // Membership Request Functions
@@ -1497,6 +1921,7 @@
 
             // Refresh displays
             loadAdminData();
+            updateMembersListDisplay();
             showNotification(`${request.name} has been approved!`, 'success');
         }
 
@@ -1547,6 +1972,7 @@
                     }
 
                     loadAdminData();
+                    updateMembersListDisplay();
                     showNotification(`${sanitizedName} has been removed`, 'success');
                 };
 
@@ -1576,6 +2002,7 @@
 
                 if (storedApproved) {
                     approvedMembers = JSON.parse(storedApproved);
+                    updateMembersListDisplay();
                 }
             } catch (error) {
                 console.error('Failed to load membership data:', error);
@@ -1585,9 +2012,10 @@
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
-            initCalendar();
+            initEventProposalForm();
             initMembershipForm();
             loadMembershipData();
+            loadEventsData();
         });
     </script>
 </body>

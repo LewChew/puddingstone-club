@@ -12,16 +12,17 @@
         }
 
         :root {
-            --primary-color: #8B4513;
-            --secondary-color: #D2691E;
-            --accent-color: #FF6B35;
-            --text-dark: #2C1810;
-            --text-light: #6B4423;
-            --bg-light: #FFF8F0;
-            --bg-white: #FFFFFF;
-            --border-color: #E5D4C1;
-            --success-color: #4CAF50;
-            --hover-color: #FFF3E0;
+            --primary-color: #003366;      /* Deep Navy Blue */
+            --secondary-color: #0066CC;    /* Ocean Blue */
+            --accent-color: #DC143C;       /* Crimson Red */
+            --text-dark: #1a1a2e;          /* Dark Navy */
+            --text-light: #4a5568;         /* Slate Gray */
+            --bg-light: #F0F4F8;           /* Light Blue-Gray */
+            --bg-white: #FFFFFF;           /* White */
+            --border-color: #B8C5D6;       /* Light Navy */
+            --success-color: #2E8B57;      /* Sea Green */
+            --hover-color: #E6F0FF;        /* Light Sky Blue */
+            --gold-accent: #DAA520;        /* Nautical Gold */
         }
 
         body {
@@ -43,6 +44,24 @@
             color: white;
             padding: 2rem 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--accent-color);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--accent-color) 0px,
+                var(--accent-color) 20px,
+                white 20px,
+                white 40px
+            );
         }
 
         .header-content {
@@ -113,14 +132,13 @@
         }
 
         .section-title::after {
-            content: '';
+            content: '⚓';
             position: absolute;
-            bottom: 0;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--accent-color);
+            font-size: 1.5rem;
+            color: var(--accent-color);
         }
 
         /* Welcome Section */
@@ -130,6 +148,8 @@
             padding: 2rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
+            border-left: 4px solid var(--accent-color);
+            border-right: 4px solid var(--secondary-color);
         }
 
         .welcome-content p {
@@ -144,6 +164,7 @@
             border-radius: 10px;
             padding: 2rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--accent-color);
         }
 
         .month-selector {
@@ -157,16 +178,19 @@
         .month-selector button {
             background: var(--secondary-color);
             color: white;
-            border: none;
+            border: 2px solid var(--primary-color);
             padding: 0.5rem 1rem;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-weight: 600;
         }
 
         .month-selector button:hover {
             background: var(--primary-color);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
         }
 
         #currentMonth {
@@ -189,9 +213,10 @@
             font-weight: bold;
             text-align: center;
             padding: 0.5rem;
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-radius: 5px;
+            border: 1px solid var(--accent-color);
         }
 
         .calendar-day {
@@ -223,7 +248,8 @@
         .calendar-day.selected {
             background: var(--accent-color);
             color: white;
-            border-color: var(--accent-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--accent-color), 0 0 0 4px var(--primary-color);
         }
 
         .day-number {
@@ -247,6 +273,7 @@
             padding: 1.5rem;
             background: var(--bg-light);
             border-radius: 8px;
+            border-left: 3px solid var(--secondary-color);
         }
 
         .member-input h3 {
@@ -277,16 +304,22 @@
         .btn {
             background: var(--accent-color);
             color: white;
-            border: none;
+            border: 2px solid var(--primary-color);
             padding: 0.75rem 1.5rem;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn:hover {
             background: var(--primary-color);
+            border-color: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .selected-dates {
@@ -305,6 +338,7 @@
             border-radius: 15px;
             margin: 0.25rem;
             font-size: 0.9rem;
+            border: 1px solid var(--primary-color);
         }
 
         /* Results Section */
@@ -327,6 +361,7 @@
             background: var(--bg-light);
             border-radius: 5px;
             border-left: 4px solid var(--accent-color);
+            border-right: 2px solid var(--secondary-color);
         }
 
         .result-date {
@@ -345,6 +380,8 @@
             padding: 1.5rem;
             background: var(--bg-light);
             border-radius: 8px;
+            border-top: 3px solid var(--accent-color);
+            border-bottom: 3px solid var(--secondary-color);
         }
 
         .member-list h3 {
@@ -368,17 +405,21 @@
         }
 
         .remove-member {
-            background: #ff4444;
+            background: var(--accent-color);
             color: white;
-            border: none;
+            border: 1px solid var(--primary-color);
             padding: 0.25rem 0.75rem;
             border-radius: 3px;
             cursor: pointer;
             font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
         .remove-member:hover {
-            background: #cc0000;
+            background: var(--primary-color);
+            border-color: var(--gold-accent);
+            transform: translateY(-1px);
         }
 
         /* Screen reader only */
@@ -453,11 +494,29 @@
 
         /* Footer */
         footer {
-            background: var(--text-dark);
+            background: linear-gradient(135deg, var(--primary-color), var(--text-dark));
             color: white;
             text-align: center;
             padding: 2rem 0;
             margin-top: 4rem;
+            border-top: 3px solid var(--accent-color);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--accent-color) 0px,
+                var(--accent-color) 20px,
+                var(--secondary-color) 20px,
+                var(--secondary-color) 40px
+            );
         }
 
         @media (max-width: 768px) {
@@ -485,7 +544,7 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1>🍷 Puddingstone Club</h1>
+                <h1>⚓ Puddingstone Club ⚓</h1>
                 <p class="tagline">Little Compton's Premier Social Supper Club</p>
             </div>
         </div>
@@ -538,7 +597,7 @@
                 <div class="calendar" id="calendar" role="grid" aria-label="Calendar for date selection"></div>
 
                 <div class="results" id="results">
-                    <h3>📅 Best Dates for Next Gathering</h3>
+                    <h3>⚓ Best Dates for Next Gathering ⚓</h3>
                     <div id="resultsList" role="region" aria-live="polite">
                         <p class="empty-state">No availability submitted yet. Members can select their available dates above.</p>
                     </div>

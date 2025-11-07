@@ -2,28 +2,49 @@
 
 This folder contains photos for the Puddingstone Club website.
 
-## How to Add Photos
+## How to Add Photos via Git
 
-1. Add your photo files to this directory
-2. Supported formats: JPG, JPEG, PNG, GIF, WEBP
-3. Recommended size: 1200px width for optimal display
-4. File naming: Use descriptive names (e.g., `dinner-sept-2024.jpg`, `gathering-harbor.jpg`)
+1. **Add your photo files** to this directory (`assets/photos/`)
+2. **Commit to git**:
+   ```bash
+   git add assets/photos/your-photo.jpg
+   git commit -m "Add gathering photo"
+   git push
+   ```
+3. **Photos automatically appear** on the website after pushing!
 
-## Current Photos
+## Supported Formats
 
-Photos in this directory will automatically appear in:
-- **Welcome Page Carousel** - Rotating slideshow on the main page
-- **Gallery Page** - Full photo grid view
+- JPG/JPEG
+- PNG
+- GIF
+- WEBP
+- SVG
 
 ## Photo Guidelines
 
-- Use high-quality images that represent club gatherings
-- Keep file sizes reasonable (under 2MB recommended)
-- Horizontal/landscape orientation works best for carousel
-- Add a mix of food, people, and venue photos
+- **Size**: 1200-1600px width recommended for carousel
+- **File size**: Under 2MB for faster loading
+- **Orientation**: Horizontal/landscape works best for carousel
+- **Quality**: High-quality images of club gatherings
+- **Naming**: Use descriptive names (e.g., `dinner-sept-2024.jpg`, `harbor-gathering.jpg`)
 
-## Adding Photos
+## Where Photos Appear
 
-Simply drag and drop your photos into this folder. The website will automatically detect and display them.
+All photos in this directory automatically display in:
+- **Welcome Page Carousel** - Auto-rotating slideshow
+- **Gallery Page** - Full grid view with lightbox
 
-**Note:** Photos are loaded client-side, so all photos in this directory will be visible to all visitors.
+## Example Photo Names
+
+Good examples:
+- `summer-dinner-2024.jpg`
+- `seafood-feast-june.jpg`
+- `little-compton-sunset.jpg`
+- `group-photo-annual-gathering.jpg`
+
+## Admin Caption Management
+
+While photos are uploaded via git, admins can add optional captions through the Admin panel that will overlay on gallery photos and appear in the carousel.
+
+**Note:** All photos in this directory are publicly visible. Do not upload sensitive or private photos.

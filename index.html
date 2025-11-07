@@ -1489,17 +1489,31 @@
                 <div class="admin-panel" id="adminPanel" style="display: none;">
                     <h3>⚓ Photo Management</h3>
                     <div class="admin-photo-section" style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <p style="margin-bottom: 1rem; color: var(--text-light);">Add photos to display in the carousel and gallery:</p>
-                        <form id="addPhotoForm" style="margin-bottom: 1.5rem;">
-                            <div class="form-row">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <input type="text" id="photoUrl" placeholder="Photo URL" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <input type="text" id="photoCaption" placeholder="Caption (optional)" maxlength="100" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
-                                </div>
+                        <div style="background: var(--hover-color); padding: 1rem; border-radius: 5px; border-left: 3px solid var(--secondary-color); margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">📁 Upload Photos via Git</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.5rem;">Add photos to the repository:</p>
+                            <ol style="font-size: 0.85rem; color: var(--text-light); margin-left: 1.5rem; line-height: 1.6;">
+                                <li>Add image files to <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 3px;">assets/photos/</code></li>
+                                <li>Commit: <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 3px;">git add assets/photos/your-photo.jpg</code></li>
+                                <li>Push: <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 3px;">git push</code></li>
+                                <li>Photos appear automatically on the site!</li>
+                            </ol>
+                        </div>
+
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Add Captions to Photos</h4>
+                        <p style="margin-bottom: 1rem; color: var(--text-light); font-size: 0.9rem;">Select a photo from the repository and add a caption:</p>
+                        <form id="addCaptionForm" style="margin-bottom: 1.5rem;">
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="photoSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Select Photo:</label>
+                                <select id="photoSelect" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
+                                    <option value="">Loading photos...</option>
+                                </select>
                             </div>
-                            <button type="submit" class="btn" style="margin-top: 1rem;">Add Photo</button>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="photoCaption" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Caption:</label>
+                                <input type="text" id="photoCaption" placeholder="Optional caption" maxlength="100" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
+                            </div>
+                            <button type="submit" class="btn">Save Caption</button>
                         </form>
                         <div id="adminPhotoList"></div>
                     </div>
@@ -1554,8 +1568,17 @@
         let proposedEvents = [];
         let currentUserName = '';
         let clubPhotos = [];
+        let photoCaptions = {}; // Store captions separately {filename: caption}
         let currentCarouselIndex = 0;
         let carouselInterval = null;
+
+        // Photo file list - update this when adding photos to assets/photos/
+        const PHOTO_FILES = [
+            // Add your photo filenames here, e.g.:
+            // 'dinner-2024.jpg',
+            // 'harbor-gathering.jpg',
+            // 'seafood-feast.jpg',
+        ];
 
         // Utility Functions
         function sanitizeHTML(str) {
@@ -2209,45 +2232,72 @@
 
         // Photo Management Functions
         function initPhotoManagement() {
-            const form = document.getElementById('addPhotoForm');
+            const form = document.getElementById('addCaptionForm');
             if (form) {
-                form.addEventListener('submit', handleAddPhoto);
+                form.addEventListener('submit', handleAddCaption);
             }
+            populatePhotoSelect();
         }
 
-        function handleAddPhoto(e) {
+        function populatePhotoSelect() {
+            const select = document.getElementById('photoSelect');
+            if (!select) return;
+
+            if (clubPhotos.length === 0) {
+                select.innerHTML = '<option value="">No photos in repository yet</option>';
+                return;
+            }
+
+            select.innerHTML = '<option value="">Select a photo...</option>' +
+                clubPhotos.map((photo, index) => {
+                    const filename = photo.url.split('/').pop();
+                    return `<option value="${index}">${filename}</option>`;
+                }).join('');
+
+            // Update caption field when photo is selected
+            select.addEventListener('change', (e) => {
+                const index = parseInt(e.target.value);
+                if (!isNaN(index) && clubPhotos[index]) {
+                    document.getElementById('photoCaption').value = clubPhotos[index].caption || '';
+                }
+            });
+        }
+
+        function handleAddCaption(e) {
             e.preventDefault();
 
-            const url = document.getElementById('photoUrl').value.trim();
-            const caption = document.getElementById('photoCaption').value.trim();
+            const select = document.getElementById('photoSelect');
+            const captionInput = document.getElementById('photoCaption');
+            const index = parseInt(select.value);
 
-            // Basic URL validation
-            try {
-                new URL(url);
-            } catch (error) {
-                showNotification('Please enter a valid URL', 'error');
+            if (isNaN(index) || !clubPhotos[index]) {
+                showNotification('Please select a photo', 'error');
                 return;
             }
 
-            const photo = {
-                id: Date.now(),
-                url: url,
-                caption: caption,
-                addedDate: new Date().toISOString()
-            };
+            const photo = clubPhotos[index];
+            const filename = photo.url.split('/').pop();
+            const caption = captionInput.value.trim();
 
-            clubPhotos.push(photo);
+            // Update caption
+            if (caption) {
+                photoCaptions[filename] = caption;
+                clubPhotos[index].caption = caption;
+            } else {
+                delete photoCaptions[filename];
+                clubPhotos[index].caption = '';
+            }
 
-            if (!savePhotosData()) {
-                showNotification('Failed to save photo', 'error');
+            if (!saveCaptionsData()) {
+                showNotification('Failed to save caption', 'error');
                 return;
             }
 
-            document.getElementById('addPhotoForm').reset();
             renderCarousel();
             renderGallery();
             displayAdminPhotos();
-            showNotification('Photo added successfully!', 'success');
+            populatePhotoSelect();
+            showNotification(caption ? 'Caption saved!' : 'Caption removed!', 'success');
         }
 
         function displayAdminPhotos() {
@@ -2256,80 +2306,67 @@
             if (!container) return;
 
             if (clubPhotos.length === 0) {
-                container.innerHTML = '<p class="empty-state">No photos added yet.</p>';
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; background: white; border-radius: 5px; border: 2px dashed var(--border-color);">
+                        <p style="color: var(--text-light);">📸 No photos in repository yet</p>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">Add photos to <code>assets/photos/</code> and push to git</p>
+                    </div>
+                `;
                 return;
             }
 
             container.innerHTML = `
-                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Current Photos (${clubPhotos.length})</h4>
+                <h4 style="color: var(--primary-color); margin-bottom: 1rem; margin-top: 1.5rem;">📷 Repository Photos (${clubPhotos.length})</h4>
                 ${clubPhotos.map((photo, index) => {
-                    const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : 'No caption';
+                    const filename = photo.url.split('/').pop();
+                    const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : '<em style="color: var(--text-light);">No caption</em>';
                     return `
-                        <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: white; border-radius: 5px; margin-bottom: 0.5rem;">
-                            <img src="${sanitizeHTML(photo.url)}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px;" alt="${sanitizedCaption}">
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: white; border-radius: 5px; margin-bottom: 0.5rem; border: 1px solid var(--border-color);">
+                            <img src="${sanitizeHTML(photo.url)}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px; border: 2px solid var(--border-color);" alt="${photo.caption || filename}">
                             <div style="flex: 1;">
-                                <strong>${sanitizedCaption}</strong>
-                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">${sanitizeHTML(photo.url)}</p>
+                                <strong style="color: var(--primary-color);">${sanitizeHTML(filename)}</strong>
+                                <p style="font-size: 0.85rem; margin-top: 0.25rem;">${sanitizedCaption}</p>
                             </div>
-                            <button class="btn remove-member" onclick="deletePhoto(${photo.id})" style="padding: 0.5rem 1rem;">Delete</button>
                         </div>
                     `;
                 }).join('')}
+                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 1rem; font-style: italic;">
+                    💡 To remove a photo, delete it from <code>assets/photos/</code> and push to git
+                </p>
             `;
         }
 
-        function deletePhoto(photoId) {
-            const photo = clubPhotos.find(p => p.id === photoId);
-            if (!photo) return;
-
-            const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : 'this photo';
-            showNotification(`Delete ${sanitizedCaption}?`, 'warning');
-
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                const confirmBtn = document.createElement('button');
-                confirmBtn.textContent = 'Confirm';
-                confirmBtn.className = 'btn';
-                confirmBtn.style.marginTop = '10px';
-                confirmBtn.style.padding = '0.5rem 1rem';
-                confirmBtn.style.fontSize = '0.9rem';
-
-                confirmBtn.onclick = () => {
-                    clubPhotos = clubPhotos.filter(p => p.id !== photoId);
-
-                    if (!savePhotosData()) {
-                        showNotification('Failed to delete photo', 'error');
-                        return;
-                    }
-
-                    renderCarousel();
-                    renderGallery();
-                    displayAdminPhotos();
-                    showNotification('Photo deleted successfully', 'success');
-                };
-
-                existingNotification.querySelector('.notification-content').appendChild(confirmBtn);
-            }
-        }
-
-        function savePhotosData() {
+        function saveCaptionsData() {
             try {
-                localStorage.setItem('puddingstonePhotos', JSON.stringify(clubPhotos));
+                localStorage.setItem('puddingstoneCaptions', JSON.stringify(photoCaptions));
                 return true;
             } catch (error) {
-                console.error('Failed to save photos:', error);
+                console.error('Failed to save captions:', error);
                 return false;
             }
         }
 
         function loadPhotosData() {
             try {
-                const stored = localStorage.getItem('puddingstonePhotos');
-                if (stored) {
-                    clubPhotos = JSON.parse(stored);
-                    renderCarousel();
-                    renderGallery();
+                // Load captions from localStorage
+                const storedCaptions = localStorage.getItem('puddingstoneCaptions');
+                if (storedCaptions) {
+                    photoCaptions = JSON.parse(storedCaptions);
                 }
+
+                // Build photo list from PHOTO_FILES array
+                clubPhotos = PHOTO_FILES.map((filename, index) => {
+                    const url = `assets/photos/${filename}`;
+                    return {
+                        id: index,
+                        url: url,
+                        caption: photoCaptions[filename] || '',
+                        addedDate: new Date().toISOString()
+                    };
+                });
+
+                renderCarousel();
+                renderGallery();
             } catch (error) {
                 console.error('Failed to load photos:', error);
             }

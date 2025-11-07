@@ -713,6 +713,240 @@
             word-break: break-all;
         }
 
+        /* Photo Carousel */
+        .carousel-container {
+            margin-top: 3rem;
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .carousel {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 8px;
+            background: var(--bg-light);
+        }
+
+        .carousel-inner {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+        }
+
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .carousel-placeholder {
+            text-align: center;
+            color: var(--text-light);
+            padding: 2rem;
+        }
+
+        .carousel-placeholder p:first-child {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 51, 102, 0.7);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            z-index: 2;
+        }
+
+        .carousel-control:hover {
+            background: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-control.prev {
+            left: 1rem;
+        }
+
+        .carousel-control.next {
+            right: 1rem;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-indicator.active {
+            background: var(--accent-color);
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        .carousel-indicator:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Photo Gallery */
+        .gallery-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .gallery-intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-item-caption {
+            opacity: 1;
+        }
+
+        .gallery-placeholder {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+            background: var(--bg-light);
+            border-radius: 8px;
+            border: 2px dashed var(--border-color);
+        }
+
+        /* Photo Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lightbox-close:hover {
+            background: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -728,6 +962,15 @@
 
             .rsvp-actions {
                 flex-direction: column;
+            }
+
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-control {
+                padding: 0.5rem 1rem;
+                font-size: 1.5rem;
             }
         }
 
@@ -1072,6 +1315,7 @@
             <ul class="nav-links">
                 <li><a href="#" data-section="welcome" class="active">Welcome</a></li>
                 <li><a href="#" data-section="scheduler">Event Scheduler</a></li>
+                <li><a href="#" data-section="gallery">Gallery</a></li>
                 <li><a href="#" data-section="members">Members</a></li>
                 <li><a href="#" data-section="request">Request Membership</a></li>
                 <li><a href="#" data-section="admin">Admin</a></li>
@@ -1087,6 +1331,24 @@
                 <p>Welcome to Little Compton's most cherished gathering of food enthusiasts and friends. The Puddingstone Club brings together busy professionals and families who share a passion for exceptional cuisine, warm conversation, and the irreplaceable joy of communal dining.</p>
                 <p>Our intimate group of members meets regularly for carefully curated supper events, where the menu is matched only by the quality of the company. Despite our demanding schedules, we make time for what matters most: good food and great friendship.</p>
                 <p>Use our scheduling tool to help coordinate our next memorable evening together.</p>
+            </div>
+
+            <!-- Photo Carousel -->
+            <div class="carousel-container">
+                <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 1.5rem;">⚓ Our Gatherings ⚓</h3>
+                <div class="carousel" id="photoCarousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <div class="carousel-item active">
+                            <div class="carousel-placeholder">
+                                <p>📸</p>
+                                <p>Add photos via Admin panel</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control prev" onclick="moveCarousel(-1)" aria-label="Previous photo">‹</button>
+                    <button class="carousel-control next" onclick="moveCarousel(1)" aria-label="Next photo">›</button>
+                    <div class="carousel-indicators" id="carouselIndicators"></div>
+                </div>
             </div>
         </section>
 
@@ -1138,6 +1400,23 @@
                     <h3>⚓ Proposed Events</h3>
                     <div id="proposedEventsList">
                         <p class="empty-state">No events proposed yet. Be the first to suggest a gathering!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section">
+            <h2 class="section-title">Photo Gallery</h2>
+            <div class="gallery-container">
+                <div class="gallery-intro">
+                    <p>Memories from our gatherings, celebrations, and culinary adventures together.</p>
+                </div>
+                <div class="photo-grid" id="photoGallery">
+                    <div class="gallery-placeholder">
+                        <p style="font-size: 3rem; margin-bottom: 1rem;">📸</p>
+                        <p>No photos yet</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">Admins can add photos via the Admin panel</p>
                     </div>
                 </div>
             </div>
@@ -1208,6 +1487,23 @@
                 </div>
 
                 <div class="admin-panel" id="adminPanel" style="display: none;">
+                    <h3>⚓ Photo Management</h3>
+                    <div class="admin-photo-section" style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                        <p style="margin-bottom: 1rem; color: var(--text-light);">Add photos to display in the carousel and gallery:</p>
+                        <form id="addPhotoForm" style="margin-bottom: 1.5rem;">
+                            <div class="form-row">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <input type="text" id="photoUrl" placeholder="Photo URL" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <input type="text" id="photoCaption" placeholder="Caption (optional)" maxlength="100" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn" style="margin-top: 1rem;">Add Photo</button>
+                        </form>
+                        <div id="adminPhotoList"></div>
+                    </div>
+
                     <h3>⚓ Membership Requests</h3>
                     <div id="pendingRequests">
                         <p class="empty-state">No pending membership requests.</p>
@@ -1225,6 +1521,14 @@
             </div>
         </section>
     </main>
+
+    <!-- Photo Lightbox -->
+    <div class="lightbox" id="photoLightbox" onclick="closeLightbox()">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">×</button>
+            <img id="lightboxImage" src="" alt="Full size photo">
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -1249,6 +1553,9 @@
         let isAdminLoggedIn = false;
         let proposedEvents = [];
         let currentUserName = '';
+        let clubPhotos = [];
+        let currentCarouselIndex = 0;
+        let carouselInterval = null;
 
         // Utility Functions
         function sanitizeHTML(str) {
@@ -1766,6 +2073,268 @@
             }).join('');
         }
 
+        // Photo Carousel Functions
+        function initCarousel() {
+            renderCarousel();
+            renderGallery();
+            startCarouselAutoRotate();
+        }
+
+        function renderCarousel() {
+            const carouselInner = document.getElementById('carouselInner');
+            const indicators = document.getElementById('carouselIndicators');
+
+            if (!carouselInner) return;
+
+            if (clubPhotos.length === 0) {
+                carouselInner.innerHTML = `
+                    <div class="carousel-item active">
+                        <div class="carousel-placeholder">
+                            <p>📸</p>
+                            <p>Add photos via Admin panel</p>
+                        </div>
+                    </div>
+                `;
+                indicators.innerHTML = '';
+                return;
+            }
+
+            carouselInner.innerHTML = clubPhotos.map((photo, index) => {
+                const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : '';
+                return `
+                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                        <img src="${sanitizeHTML(photo.url)}" alt="${sanitizedCaption}" onerror="this.parentElement.innerHTML='<div class=carousel-placeholder><p>❌</p><p>Image failed to load</p></div>'">
+                    </div>
+                `;
+            }).join('');
+
+            indicators.innerHTML = clubPhotos.map((_, index) =>
+                `<button class="carousel-indicator ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></button>`
+            ).join('');
+
+            currentCarouselIndex = 0;
+        }
+
+        function moveCarousel(direction) {
+            if (clubPhotos.length === 0) return;
+
+            const items = document.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+
+            items[currentCarouselIndex].classList.remove('active');
+            indicators[currentCarouselIndex]?.classList.remove('active');
+
+            currentCarouselIndex = (currentCarouselIndex + direction + clubPhotos.length) % clubPhotos.length;
+
+            items[currentCarouselIndex].classList.add('active');
+            indicators[currentCarouselIndex]?.classList.add('active');
+
+            // Reset auto-rotate timer
+            resetCarouselAutoRotate();
+        }
+
+        function goToSlide(index) {
+            if (clubPhotos.length === 0) return;
+
+            const items = document.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+
+            items[currentCarouselIndex].classList.remove('active');
+            indicators[currentCarouselIndex]?.classList.remove('active');
+
+            currentCarouselIndex = index;
+
+            items[currentCarouselIndex].classList.add('active');
+            indicators[currentCarouselIndex]?.classList.add('active');
+
+            resetCarouselAutoRotate();
+        }
+
+        function startCarouselAutoRotate() {
+            if (clubPhotos.length <= 1) return;
+
+            carouselInterval = setInterval(() => {
+                moveCarousel(1);
+            }, 5000); // Rotate every 5 seconds
+        }
+
+        function resetCarouselAutoRotate() {
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+            }
+            startCarouselAutoRotate();
+        }
+
+        // Gallery Functions
+        function renderGallery() {
+            const gallery = document.getElementById('photoGallery');
+
+            if (!gallery) return;
+
+            if (clubPhotos.length === 0) {
+                gallery.innerHTML = `
+                    <div class="gallery-placeholder">
+                        <p style="font-size: 3rem; margin-bottom: 1rem;">📸</p>
+                        <p>No photos yet</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">Admins can add photos via the Admin panel</p>
+                    </div>
+                `;
+                return;
+            }
+
+            gallery.innerHTML = clubPhotos.map((photo, index) => {
+                const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : `Photo ${index + 1}`;
+                return `
+                    <div class="gallery-item" onclick="openLightbox('${sanitizeHTML(photo.url)}')">
+                        <img src="${sanitizeHTML(photo.url)}" alt="${sanitizedCaption}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'225\'%3E%3Crect fill=\'%23ddd\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'18\' fill=\'%23999\'%3EImage Error%3C/text%3E%3C/svg%3E'">
+                        ${photo.caption ? `<div class="gallery-item-caption">${sanitizedCaption}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Lightbox Functions
+        function openLightbox(imageUrl) {
+            const lightbox = document.getElementById('photoLightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+
+            lightboxImage.src = imageUrl;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('photoLightbox');
+            lightbox.classList.remove('active');
+        }
+
+        // Photo Management Functions
+        function initPhotoManagement() {
+            const form = document.getElementById('addPhotoForm');
+            if (form) {
+                form.addEventListener('submit', handleAddPhoto);
+            }
+        }
+
+        function handleAddPhoto(e) {
+            e.preventDefault();
+
+            const url = document.getElementById('photoUrl').value.trim();
+            const caption = document.getElementById('photoCaption').value.trim();
+
+            // Basic URL validation
+            try {
+                new URL(url);
+            } catch (error) {
+                showNotification('Please enter a valid URL', 'error');
+                return;
+            }
+
+            const photo = {
+                id: Date.now(),
+                url: url,
+                caption: caption,
+                addedDate: new Date().toISOString()
+            };
+
+            clubPhotos.push(photo);
+
+            if (!savePhotosData()) {
+                showNotification('Failed to save photo', 'error');
+                return;
+            }
+
+            document.getElementById('addPhotoForm').reset();
+            renderCarousel();
+            renderGallery();
+            displayAdminPhotos();
+            showNotification('Photo added successfully!', 'success');
+        }
+
+        function displayAdminPhotos() {
+            const container = document.getElementById('adminPhotoList');
+
+            if (!container) return;
+
+            if (clubPhotos.length === 0) {
+                container.innerHTML = '<p class="empty-state">No photos added yet.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Current Photos (${clubPhotos.length})</h4>
+                ${clubPhotos.map((photo, index) => {
+                    const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : 'No caption';
+                    return `
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: white; border-radius: 5px; margin-bottom: 0.5rem;">
+                            <img src="${sanitizeHTML(photo.url)}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px;" alt="${sanitizedCaption}">
+                            <div style="flex: 1;">
+                                <strong>${sanitizedCaption}</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">${sanitizeHTML(photo.url)}</p>
+                            </div>
+                            <button class="btn remove-member" onclick="deletePhoto(${photo.id})" style="padding: 0.5rem 1rem;">Delete</button>
+                        </div>
+                    `;
+                }).join('')}
+            `;
+        }
+
+        function deletePhoto(photoId) {
+            const photo = clubPhotos.find(p => p.id === photoId);
+            if (!photo) return;
+
+            const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : 'this photo';
+            showNotification(`Delete ${sanitizedCaption}?`, 'warning');
+
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = 'Confirm';
+                confirmBtn.className = 'btn';
+                confirmBtn.style.marginTop = '10px';
+                confirmBtn.style.padding = '0.5rem 1rem';
+                confirmBtn.style.fontSize = '0.9rem';
+
+                confirmBtn.onclick = () => {
+                    clubPhotos = clubPhotos.filter(p => p.id !== photoId);
+
+                    if (!savePhotosData()) {
+                        showNotification('Failed to delete photo', 'error');
+                        return;
+                    }
+
+                    renderCarousel();
+                    renderGallery();
+                    displayAdminPhotos();
+                    showNotification('Photo deleted successfully', 'success');
+                };
+
+                existingNotification.querySelector('.notification-content').appendChild(confirmBtn);
+            }
+        }
+
+        function savePhotosData() {
+            try {
+                localStorage.setItem('puddingstonePhotos', JSON.stringify(clubPhotos));
+                return true;
+            } catch (error) {
+                console.error('Failed to save photos:', error);
+                return false;
+            }
+        }
+
+        function loadPhotosData() {
+            try {
+                const stored = localStorage.getItem('puddingstonePhotos');
+                if (stored) {
+                    clubPhotos = JSON.parse(stored);
+                    renderCarousel();
+                    renderGallery();
+                }
+            } catch (error) {
+                console.error('Failed to load photos:', error);
+            }
+        }
+
         // Membership Request Functions
         function initMembershipForm() {
             const form = document.getElementById('membershipRequestForm');
@@ -1872,6 +2441,7 @@
         function loadAdminData() {
             displayPendingRequests();
             displayApprovedMembers();
+            displayAdminPhotos();
         }
 
         function displayPendingRequests() {
@@ -2054,8 +2624,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             initEventProposalForm();
             initMembershipForm();
+            initPhotoManagement();
             loadMembershipData();
             loadEventsData();
+            loadPhotosData();
+            initCarousel();
         });
     </script>
 </body>

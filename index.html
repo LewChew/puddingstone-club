@@ -759,8 +759,9 @@
         .carousel-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 8px;
+            background: var(--bg-dark);
         }
 
         .carousel-placeholder {
@@ -868,7 +869,8 @@
         .gallery-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background: var(--bg-dark);
         }
 
         .gallery-item-caption {
@@ -1335,7 +1337,7 @@
 
             <!-- Photo Carousel -->
             <div class="carousel-container">
-                <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 1.5rem;">⚓ Our Gatherings ⚓</h3>
+                <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 1.5rem;">⚓ The Stones ⚓</h3>
                 <div class="carousel" id="photoCarousel">
                     <div class="carousel-inner" id="carouselInner">
                         <div class="carousel-item active">
@@ -1573,11 +1575,12 @@
         let carouselInterval = null;
 
         // Photo file list - update this when adding photos to assets/photos/
+        // Note: HEIC format not supported in browsers - convert to JPG/JPEG before uploading
         const PHOTO_FILES = [
             'AmishBabes.JPG',
             'BeachBums.jpeg',
             'BoatDrinks.jpeg',
-            'BoysNKitchen.heic',
+            // 'BoysNKitchen.heic', // HEIC not supported in browsers
             'ChrisSpeach.jpeg',
             'ChriswithBlue.jpeg',
             'LadiesAtNight.jpeg',

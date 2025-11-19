@@ -1068,6 +1068,61 @@
             font-size: 1.1rem;
         }
 
+        /* Authentication Section */
+        .auth-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--secondary-color);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: none;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .auth-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .auth-form h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .auth-form label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
         /* Admin Section */
         .admin-container {
             background: white;
@@ -1300,7 +1355,35 @@
                 gap: 0.5rem;
             }
         }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
     </style>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header>
@@ -1320,7 +1403,9 @@
                 <li><a href="#" data-section="gallery">Gallery</a></li>
                 <li><a href="#" data-section="members">Members</a></li>
                 <li><a href="#" data-section="request">Request Membership</a></li>
-                <li><a href="#" data-section="admin">Admin</a></li>
+                <li id="adminNavItem" style="display: none;"><a href="#" data-section="admin">Admin</a></li>
+                <li id="loginNavItem"><a href="#" data-section="auth">Login</a></li>
+                <li id="signoutNavItem" style="display: none;"><a href="#" onclick="signOut(); return false;">Sign Out</a></li>
             </ul>
         </div>
     </nav>
@@ -1358,30 +1443,45 @@
         <section id="scheduler" class="section">
             <h2 class="section-title">Propose an Event</h2>
             <div class="scheduler-container">
-                <div class="event-proposal-intro">
-                    <p><strong>Members Only:</strong> Only approved club members can propose events. Your proposal will be shared with all members who can then RSVP or suggest alternative dates.</p>
-                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Not a member yet? <a href="#" onclick="document.querySelector('[data-section=request]').click(); return false;" style="color: var(--accent-color); text-decoration: underline;">Request membership here</a>.</p>
+                <!-- Logged Out Message -->
+                <div id="eventSchedulerLoggedOut" class="event-proposal-intro" style="display: none;">
+                    <div style="background: var(--bg-white); padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 3px solid var(--secondary-color);">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">⚓ Members Only Feature</h3>
+                        <p style="font-size: 1rem; margin-bottom: 1rem;">Event scheduling is available exclusively to Puddingstone Club members.</p>
+                        <p style="color: var(--text-light); margin-bottom: 1.5rem;">Join our community to propose gatherings, view upcoming events, and coordinate with fellow members.</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="#" onclick="document.querySelector('[data-section=request]').click(); return false;" class="btn btn-large" style="text-decoration: none;">Request Membership</a>
+                            <a href="#" onclick="document.querySelector('[data-section=auth]').click(); return false;" class="btn" style="text-decoration: none; background: var(--bg-white); color: var(--primary-color); border: 2px solid var(--primary-color);">Already a Member? Sign In</a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="event-proposal-form-container">
+                <!-- Logged In Content -->
+                <div id="eventSchedulerLoggedIn" style="display: none;">
+                    <div class="event-proposal-intro">
+                        <p><strong>Welcome!</strong> Propose events and coordinate with other members. Your proposals will be shared with all club members.</p>
+                    </div>
+
+                    <div class="event-proposal-form-container">
                     <h3>⚓ Create Event Proposal</h3>
+                    <div id="proposerInfo" style="background: var(--hover-color); padding: 0.75rem 1rem; border-radius: 5px; margin-bottom: 1rem; border-left: 3px solid var(--secondary-color); display: none;">
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-dark);">
+                            <strong>Proposing as:</strong> <span id="proposerNameDisplay"></span>
+                        </p>
+                    </div>
                     <form id="eventProposalForm" class="event-proposal-form">
                         <div class="form-row">
-                            <div class="form-group">
-                                <label for="proposerName">Your Name *</label>
-                                <input type="text" id="proposerName" name="proposerName" required maxlength="50" aria-label="Your name">
-                            </div>
                             <div class="form-group">
                                 <label for="eventDate">Proposed Date *</label>
                                 <input type="date" id="eventDate" name="eventDate" required aria-label="Event date">
                             </div>
-                        </div>
-
-                        <div class="form-row">
                             <div class="form-group">
                                 <label for="eventTime">Proposed Time *</label>
                                 <input type="time" id="eventTime" name="eventTime" required aria-label="Event time">
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <div class="form-group">
                                 <label for="eventLocation">Location</label>
                                 <input type="text" id="eventLocation" name="eventLocation" maxlength="100" placeholder="e.g., My house, Restaurant name" aria-label="Event location">
@@ -1398,12 +1498,14 @@
                     </form>
                 </div>
 
-                <div class="proposed-events-section">
-                    <h3>⚓ Proposed Events</h3>
-                    <div id="proposedEventsList">
-                        <p class="empty-state">No events proposed yet. Be the first to suggest a gathering!</p>
+                    <div class="proposed-events-section">
+                        <h3>⚓ Proposed Events</h3>
+                        <div id="proposedEventsList">
+                            <p class="empty-state">No events proposed yet. Be the first to suggest a gathering!</p>
+                        </div>
                     </div>
                 </div>
+                <!-- End Logged In Content -->
             </div>
         </section>
 
@@ -1411,18 +1513,60 @@
         <section id="gallery" class="section">
             <h2 class="section-title">Photo Gallery</h2>
             <div class="gallery-container">
-                <div class="gallery-intro">
-                    <p>Memories from our gatherings, celebrations, and culinary adventures together.</p>
+                <div class="gallery-intro" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <p style="flex: 1;">Memories from our gatherings, celebrations, and culinary adventures together.</p>
+                    <button id="uploadPhotoBtn" class="btn" onclick="showPhotoUploadModal()" style="display: none;">
+                        📸 Upload Photo
+                    </button>
                 </div>
                 <div class="photo-grid" id="photoGallery">
                     <div class="gallery-placeholder">
                         <p style="font-size: 3rem; margin-bottom: 1rem;">📸</p>
                         <p>No photos yet</p>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">Admins can add photos via the Admin panel</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">Members can upload photos for admin approval</p>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Photo Upload Modal -->
+        <div id="photoUploadModal" class="modal" style="display: none;">
+            <div class="modal-content" style="max-width: 500px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary-color); margin: 0;">📸 Upload Photo</h3>
+                    <button onclick="closePhotoUploadModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">×</button>
+                </div>
+
+                <form id="photoUploadForm" onsubmit="handlePhotoUpload(event)">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="photoFile" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Select Photo *</label>
+                        <input type="file" id="photoFile" accept="image/*" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
+                        <small style="color: var(--text-light); display: block; margin-top: 0.5rem;">Accepted formats: JPG, PNG, GIF (max 5MB)</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="photoUploadCaption" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Caption (Optional)</label>
+                        <textarea id="photoUploadCaption" rows="3" maxlength="200" placeholder="Add a caption to your photo..." style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px; resize: vertical;"></textarea>
+                        <small style="color: var(--text-light);"><span id="captionCharCount">0</span>/200 characters</small>
+                    </div>
+
+                    <div id="photoPreview" style="margin-bottom: 1rem; display: none;">
+                        <img id="photoPreviewImg" src="" alt="Preview" style="max-width: 100%; border-radius: 8px; border: 2px solid var(--border-color);">
+                    </div>
+
+                    <div style="background: var(--hover-color); padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+                        <p style="font-size: 0.9rem; color: var(--text-dark); margin: 0;">
+                            ℹ️ Your photo will be reviewed by an admin before appearing in the gallery.
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="button" onclick="closePhotoUploadModal()" class="btn" style="flex: 1; background: var(--bg-white); color: var(--primary-color); border: 2px solid var(--primary-color);">Cancel</button>
+                        <button type="submit" class="btn btn-large" style="flex: 1;">Upload Photo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Members Section -->
         <section id="members" class="section">
@@ -1474,65 +1618,103 @@
             </div>
         </section>
 
+        <!-- Authentication Section -->
+        <section id="auth" class="section">
+            <h2 class="section-title">Member Login</h2>
+            <div id="authSection" class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
+                    <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm" class="auth-form" style="display: block;">
+                    <h3>Welcome Back</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;">Sign in to access the event scheduler and member features.</p>
+
+                    <form onsubmit="handleLogin(event)">
+                        <div class="input-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" required placeholder="your@email.com">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        </div>
+
+                        <button type="submit" class="btn btn-large">Sign In</button>
+                    </form>
+                </div>
+
+                <!-- Signup Form -->
+                <div id="signupForm" class="auth-form" style="display: none;">
+                    <h3>Join the Club</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;">Create an account to participate in events and connect with members.</p>
+
+                    <form onsubmit="handleSignup(event)">
+                        <div class="input-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" id="signupName" required placeholder="John Doe">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="signupEmail">Email</label>
+                            <input type="email" id="signupEmail" required placeholder="your@email.com">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="signupPassword">Password</label>
+                            <input type="password" id="signupPassword" required placeholder="Choose a strong password" minlength="6">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="signupPasswordConfirm">Confirm Password</label>
+                            <input type="password" id="signupPasswordConfirm" required placeholder="Confirm your password" minlength="6">
+                        </div>
+
+                        <button type="submit" class="btn btn-large">Create Account</button>
+
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 1rem;">
+                            By creating an account, you agree to be part of the Puddingstone Club community.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
         <!-- Admin Section -->
         <section id="admin" class="section">
             <h2 class="section-title">Admin Panel</h2>
             <div class="admin-container">
                 <div class="admin-auth" id="adminAuth">
-                    <h3>🔐 Admin Access</h3>
-                    <p>Enter the admin password to manage membership requests.</p>
-                    <div class="input-group">
-                        <input type="password" id="adminPassword" placeholder="Enter admin password" aria-label="Admin password">
-                        <button class="btn" onclick="verifyAdmin()">Login</button>
-                    </div>
-                    <small style="color: var(--text-light); margin-top: 1rem; display: block;">Default password: admin123</small>
+                    <h3>🔐 Admin Access Required</h3>
+                    <p>This section is only accessible to club administrators.</p>
+                    <p style="margin-top: 1rem;">Please <a href="#" onclick="document.querySelector('[data-section=auth]').click(); return false;" style="color: var(--accent-color); text-decoration: underline; font-weight: bold;">sign in</a> with your admin account to access the management panel.</p>
                 </div>
 
                 <div class="admin-panel" id="adminPanel" style="display: none;">
-                    <h3>⚓ Photo Management</h3>
-                    <div class="admin-photo-section" style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <div style="background: var(--hover-color); padding: 1rem; border-radius: 5px; border-left: 3px solid var(--secondary-color); margin-bottom: 1.5rem;">
-                            <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">📁 Upload Photos via Git</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.5rem;">Add photos to the repository:</p>
-                            <ol style="font-size: 0.85rem; color: var(--text-light); margin-left: 1.5rem; line-height: 1.6;">
-                                <li>Add image files to <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 3px;">assets/photos/</code></li>
-                                <li>Commit: <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 3px;">git add assets/photos/your-photo.jpg</code></li>
-                                <li>Push: <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 3px;">git push</code></li>
-                                <li>Photos appear automatically on the site!</li>
-                            </ol>
-                        </div>
-
-                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Add Captions to Photos</h4>
-                        <p style="margin-bottom: 1rem; color: var(--text-light); font-size: 0.9rem;">Select a photo from the repository and add a caption:</p>
-                        <form id="addCaptionForm" style="margin-bottom: 1.5rem;">
-                            <div class="form-group" style="margin-bottom: 1rem;">
-                                <label for="photoSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Select Photo:</label>
-                                <select id="photoSelect" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
-                                    <option value="">Loading photos...</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-bottom: 1rem;">
-                                <label for="photoCaption" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-dark);">Caption:</label>
-                                <input type="text" id="photoCaption" placeholder="Optional caption" maxlength="100" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 5px;">
-                            </div>
-                            <button type="submit" class="btn">Save Caption</button>
-                        </form>
-                        <div id="adminPhotoList"></div>
-                    </div>
-
                     <h3>⚓ Membership Requests</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;">Review and manage membership applications. Approved members can create accounts and access member features.</p>
                     <div id="pendingRequests">
                         <p class="empty-state">No pending membership requests.</p>
                     </div>
 
                     <div class="admin-actions" style="margin-top: 2rem;">
-                        <h3>⚓ Approved Members</h3>
-                        <div id="approvedMembers">
-                            <p class="empty-state">No approved members yet.</p>
+                        <h3>⚓ Pending Photo Approvals</h3>
+                        <p style="color: var(--text-light); margin-bottom: 1rem;">Review and approve photos uploaded by members before they appear in the gallery.</p>
+                        <div id="pendingPhotos">
+                            <p class="empty-state">No pending photos.</p>
                         </div>
                     </div>
 
-                    <button class="btn" onclick="logoutAdmin()" style="margin-top: 2rem;">Logout</button>
+                    <div class="admin-actions" style="margin-top: 2rem;">
+                        <h3>⚓ Registered Members</h3>
+                        <p style="color: var(--text-light); margin-bottom: 1rem;">Current club members with active accounts.</p>
+                        <div id="approvedMembers">
+                            <p class="empty-state">No registered members yet.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1560,10 +1742,16 @@
             MAX_RESULTS_TO_SHOW: 5,
             CALENDAR_DAYS: 42,
             MAX_NAME_LENGTH: 50,
-            ADMIN_PASSWORD: 'admin123'
+            SUPABASE_URL: 'https://mnvauyzewzjqndildgqu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1udmF1eXpld3pqcW5kaWxkZ3F1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NjI3ODEsImV4cCI6MjA3OTEzODc4MX0.JUCEESdhwnzqt2jv6VnLJzqEPSni0XPHefRWJveOKXk'
         };
 
+        // Initialize Supabase Client
+        const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
         // Application State
+        let currentUser = null;
+        let currentUserProfile = null;
         let membershipRequests = [];
         let approvedMembers = [];
         let isAdminLoggedIn = false;
@@ -1658,6 +1846,250 @@
             }, 4000);
         }
 
+        // Authentication Functions
+        async function checkAuthSession() {
+            const { data: { session }, error } = await supabase.auth.getSession();
+
+            if (error) {
+                console.error('Error getting session:', error);
+                return null;
+            }
+
+            if (session) {
+                currentUser = session.user;
+                await loadUserProfile();
+                updateUIForAuthState();
+            }
+
+            return session;
+        }
+
+        async function loadUserProfile() {
+            if (!currentUser) return;
+
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (error) {
+                console.error('Error loading user profile:', error);
+                return;
+            }
+
+            currentUserProfile = data;
+            currentUserName = data.name;
+            isAdminLoggedIn = data.is_admin;
+        }
+
+        async function signIn(email, password) {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            currentUser = data.user;
+            await loadUserProfile();
+            updateUIForAuthState();
+
+            return data;
+        }
+
+        async function signOut() {
+            const { error } = await supabase.auth.signOut();
+
+            if (error) {
+                throw error;
+            }
+
+            currentUser = null;
+            currentUserProfile = null;
+            currentUserName = '';
+            isAdminLoggedIn = false;
+
+            updateUIForAuthState();
+        }
+
+        async function signUp(email, password, name) {
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        name: name
+                    }
+                }
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            return data;
+        }
+
+        function updateUIForAuthState() {
+            const authSection = document.getElementById('authSection');
+            const adminAuthSection = document.getElementById('adminAuth');
+            const adminPanel = document.getElementById('adminPanel');
+            const loginNavItem = document.getElementById('loginNavItem');
+            const signoutNavItem = document.getElementById('signoutNavItem');
+            const adminNavItem = document.getElementById('adminNavItem');
+            const proposerInfo = document.getElementById('proposerInfo');
+            const proposerNameDisplay = document.getElementById('proposerNameDisplay');
+            const eventSchedulerLoggedIn = document.getElementById('eventSchedulerLoggedIn');
+            const eventSchedulerLoggedOut = document.getElementById('eventSchedulerLoggedOut');
+
+            if (currentUser) {
+                // User is logged in
+                if (authSection) authSection.style.display = 'none';
+
+                // Show sign out, hide login in nav
+                if (loginNavItem) loginNavItem.style.display = 'none';
+                if (signoutNavItem) signoutNavItem.style.display = 'block';
+
+                // Show event scheduler content, hide logged out message
+                if (eventSchedulerLoggedIn) eventSchedulerLoggedIn.style.display = 'block';
+                if (eventSchedulerLoggedOut) eventSchedulerLoggedOut.style.display = 'none';
+
+                // Show proposer info on event form
+                if (proposerInfo) proposerInfo.style.display = 'block';
+                if (proposerNameDisplay) proposerNameDisplay.textContent = currentUserName;
+
+                // Show photo upload button
+                const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+                if (uploadPhotoBtn) uploadPhotoBtn.style.display = 'block';
+
+                // Admin panel access
+                if (isAdminLoggedIn) {
+                    if (adminNavItem) adminNavItem.style.display = 'block';
+                    if (adminAuthSection) adminAuthSection.style.display = 'none';
+                    if (adminPanel) adminPanel.style.display = 'block';
+                } else {
+                    if (adminNavItem) adminNavItem.style.display = 'none';
+                    if (adminAuthSection) adminAuthSection.style.display = 'block';
+                    if (adminPanel) adminPanel.style.display = 'none';
+                }
+            } else {
+                // User is logged out
+                if (authSection) authSection.style.display = 'block';
+                if (loginNavItem) loginNavItem.style.display = 'block';
+                if (signoutNavItem) signoutNavItem.style.display = 'none';
+                if (adminNavItem) adminNavItem.style.display = 'none';
+                if (adminAuthSection) adminAuthSection.style.display = 'block';
+                if (adminPanel) adminPanel.style.display = 'none';
+                if (proposerInfo) proposerInfo.style.display = 'none';
+
+                // Show logged out message, hide event scheduler form
+                if (eventSchedulerLoggedOut) eventSchedulerLoggedOut.style.display = 'block';
+                if (eventSchedulerLoggedIn) eventSchedulerLoggedIn.style.display = 'none';
+
+                // Hide photo upload button
+                const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+                if (uploadPhotoBtn) uploadPhotoBtn.style.display = 'none';
+            }
+        }
+
+        // Listen for auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                currentUser = session.user;
+                loadUserProfile().then(() => {
+                    updateUIForAuthState();
+                    showNotification('Successfully signed in!', 'success');
+                });
+            } else if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                currentUserProfile = null;
+                currentUserName = '';
+                isAdminLoggedIn = false;
+                updateUIForAuthState();
+                showNotification('Successfully signed out!', 'success');
+            }
+        });
+
+        // Auth Form Handlers
+        function showAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const tabs = document.querySelectorAll('.auth-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                tabs[0].classList.add('active');
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                tabs[1].classList.add('active');
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await signIn(email, password);
+                showNotification('Welcome back!', 'success');
+
+                // Clear form
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+
+                // Navigate to scheduler
+                document.querySelector('[data-section="scheduler"]').click();
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification(error.message || 'Login failed. Please check your credentials.', 'error');
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+
+            if (password !== passwordConfirm) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            try {
+                await signUp(email, password, name);
+                showNotification('Account created! Please check your email to verify your account.', 'success');
+
+                // Clear form
+                document.getElementById('signupName').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signupPasswordConfirm').value = '';
+
+                // Switch to login tab
+                showAuthTab('login');
+            } catch (error) {
+                console.error('Signup error:', error);
+                showNotification(error.message || 'Signup failed. Please try again.', 'error');
+            }
+        }
+
         // Navigation
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -1703,36 +2135,24 @@
         function handleEventProposal(e) {
             e.preventDefault();
 
-            const name = document.getElementById('proposerName').value.trim();
+            // Check if user is logged in
+            if (!currentUser || !currentUserName) {
+                showNotification('You must be logged in to propose an event.', 'error');
+                // Navigate to login
+                document.querySelector('[data-section="auth"]').click();
+                return;
+            }
+
             const date = document.getElementById('eventDate').value;
             const time = document.getElementById('eventTime').value;
             const location = document.getElementById('eventLocation').value.trim();
             const ideas = document.getElementById('eventIdeas').value.trim();
 
-            // Validate name
-            const nameValidation = validateMemberName(name);
-            if (!nameValidation.valid) {
-                showNotification(nameValidation.error, 'error');
-                return;
-            }
-
-            // Check if proposer is an approved member
-            const isMember = approvedMembers.some(member =>
-                member.name.toLowerCase() === nameValidation.name.toLowerCase()
-            );
-
-            if (!isMember) {
-                showNotification(
-                    `Only approved members can propose events. "${nameValidation.name}" is not in our approved members list. Please request membership first.`,
-                    'error'
-                );
-                return;
-            }
-
             // Create event object
             const event = {
                 id: Date.now(),
-                proposer: nameValidation.name,
+                proposer: currentUserName,
+                proposer_id: currentUser.id,
                 date: date,
                 time: time,
                 location: location || 'TBD',
@@ -2086,30 +2506,53 @@
             }
         }
 
-        function updateMembersListDisplay() {
+        async function updateMembersListDisplay() {
             const container = document.getElementById('membersListDisplay');
 
-            if (!container) return;
-
-            if (approvedMembers.length === 0) {
-                container.innerHTML = '<p class="empty-state">No approved members yet.</p>';
+            if (!container) {
+                console.error('membersListDisplay container not found');
                 return;
             }
 
-            container.innerHTML = approvedMembers.map(member => {
-                const date = new Date(member.approvedDate);
-                const sanitizedName = sanitizeHTML(member.name);
-                const sanitizedEmail = sanitizeHTML(member.email);
+            try {
+                console.log('Loading members list...');
+                const { data: members, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .order('name', { ascending: true });
 
-                return `
-                    <div class="member-item">
-                        <div>
-                            <span class="member-name">${sanitizedName}</span>
-                            <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">${sanitizedEmail}</p>
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw error;
+                }
+
+                console.log('Members loaded:', members);
+
+                if (!members || members.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No members yet. Be the first to join!</p>';
+                    return;
+                }
+
+                container.innerHTML = members.map(member => {
+                    const sanitizedName = sanitizeHTML(member.name);
+                    const sanitizedEmail = sanitizeHTML(member.email);
+
+                    return `
+                        <div class="member-item">
+                            <div>
+                                <span class="member-name">${sanitizedName}${member.is_admin ? ' <span style="color: var(--gold-accent); font-size: 0.85rem;">(Admin)</span>' : ''}</span>
+                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">${sanitizedEmail}</p>
+                            </div>
                         </div>
-                    </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading members list:', error);
+                container.innerHTML = `
+                    <p class="empty-state">Error loading members. Please check the console for details.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">${error.message}</p>
                 `;
-            }).join('');
+            }
         }
 
         // Photo Carousel Functions
@@ -2246,111 +2689,123 @@
             lightbox.classList.remove('active');
         }
 
-        // Photo Management Functions
-        function initPhotoManagement() {
-            const form = document.getElementById('addCaptionForm');
-            if (form) {
-                form.addEventListener('submit', handleAddCaption);
-            }
-            populatePhotoSelect();
-        }
-
-        function populatePhotoSelect() {
-            const select = document.getElementById('photoSelect');
-            if (!select) return;
-
-            if (clubPhotos.length === 0) {
-                select.innerHTML = '<option value="">No photos in repository yet</option>';
+        // Photo Upload Functions
+        function showPhotoUploadModal() {
+            if (!currentUser) {
+                showNotification('Please sign in to upload photos', 'error');
+                document.querySelector('[data-section="auth"]').click();
                 return;
             }
 
-            select.innerHTML = '<option value="">Select a photo...</option>' +
-                clubPhotos.map((photo, index) => {
-                    const filename = photo.url.split('/').pop();
-                    return `<option value="${index}">${filename}</option>`;
-                }).join('');
+            const modal = document.getElementById('photoUploadModal');
+            modal.style.display = 'flex';
 
-            // Update caption field when photo is selected
-            select.addEventListener('change', (e) => {
-                const index = parseInt(e.target.value);
-                if (!isNaN(index) && clubPhotos[index]) {
-                    document.getElementById('photoCaption').value = clubPhotos[index].caption || '';
+            // Reset form
+            document.getElementById('photoUploadForm').reset();
+            document.getElementById('photoPreview').style.display = 'none';
+            document.getElementById('captionCharCount').textContent = '0';
+
+            // Add file preview listener
+            const fileInput = document.getElementById('photoFile');
+            fileInput.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('photoPreviewImg').src = e.target.result;
+                        document.getElementById('photoPreview').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
                 }
-            });
+            };
+
+            // Add caption character counter
+            const captionInput = document.getElementById('photoUploadCaption');
+            captionInput.oninput = function() {
+                document.getElementById('captionCharCount').textContent = this.value.length;
+            };
         }
 
-        function handleAddCaption(e) {
-            e.preventDefault();
+        function closePhotoUploadModal() {
+            const modal = document.getElementById('photoUploadModal');
+            modal.style.display = 'none';
+        }
 
-            const select = document.getElementById('photoSelect');
-            const captionInput = document.getElementById('photoCaption');
-            const index = parseInt(select.value);
+        async function handlePhotoUpload(event) {
+            event.preventDefault();
 
-            if (isNaN(index) || !clubPhotos[index]) {
+            if (!currentUser) {
+                showNotification('Please sign in to upload photos', 'error');
+                return;
+            }
+
+            const fileInput = document.getElementById('photoFile');
+            const captionInput = document.getElementById('photoUploadCaption');
+            const file = fileInput.files[0];
+
+            if (!file) {
                 showNotification('Please select a photo', 'error');
                 return;
             }
 
-            const photo = clubPhotos[index];
-            const filename = photo.url.split('/').pop();
-            const caption = captionInput.value.trim();
-
-            // Update caption
-            if (caption) {
-                photoCaptions[filename] = caption;
-                clubPhotos[index].caption = caption;
-            } else {
-                delete photoCaptions[filename];
-                clubPhotos[index].caption = '';
-            }
-
-            if (!saveCaptionsData()) {
-                showNotification('Failed to save caption', 'error');
+            // Check file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Photo size must be less than 5MB', 'error');
                 return;
             }
 
-            renderCarousel();
-            renderGallery();
-            displayAdminPhotos();
-            populatePhotoSelect();
-            showNotification(caption ? 'Caption saved!' : 'Caption removed!', 'success');
-        }
-
-        function displayAdminPhotos() {
-            const container = document.getElementById('adminPhotoList');
-
-            if (!container) return;
-
-            if (clubPhotos.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; background: white; border-radius: 5px; border: 2px dashed var(--border-color);">
-                        <p style="color: var(--text-light);">📸 No photos in repository yet</p>
-                        <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">Add photos to <code>assets/photos/</code> and push to git</p>
-                    </div>
-                `;
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please upload an image file', 'error');
                 return;
             }
 
-            container.innerHTML = `
-                <h4 style="color: var(--primary-color); margin-bottom: 1rem; margin-top: 1.5rem;">📷 Repository Photos (${clubPhotos.length})</h4>
-                ${clubPhotos.map((photo, index) => {
-                    const filename = photo.url.split('/').pop();
-                    const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : '<em style="color: var(--text-light);">No caption</em>';
-                    return `
-                        <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: white; border-radius: 5px; margin-bottom: 0.5rem; border: 1px solid var(--border-color);">
-                            <img src="${sanitizeHTML(photo.url)}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px; border: 2px solid var(--border-color);" alt="${photo.caption || filename}">
-                            <div style="flex: 1;">
-                                <strong style="color: var(--primary-color);">${sanitizeHTML(filename)}</strong>
-                                <p style="font-size: 0.85rem; margin-top: 0.25rem;">${sanitizedCaption}</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 1rem; font-style: italic;">
-                    💡 To remove a photo, delete it from <code>assets/photos/</code> and push to git
-                </p>
-            `;
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Uploading...';
+
+            try {
+                // Generate unique filename
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${currentUser.id}.${fileExt}`;
+                const filePath = `${fileName}`;
+
+                // Upload to Supabase Storage
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('photos')
+                    .upload(filePath, file);
+
+                if (uploadError) throw uploadError;
+
+                // Insert photo metadata into database
+                const { data: photoData, error: photoError } = await supabase
+                    .from('photos')
+                    .insert([
+                        {
+                            storage_path: filePath,
+                            caption: captionInput.value.trim() || null,
+                            uploaded_by: currentUser.id,
+                            display_order: 0
+                        }
+                    ])
+                    .select()
+                    .single();
+
+                if (photoError) throw photoError;
+
+                showNotification('Photo uploaded successfully! It will appear after admin approval.', 'success');
+                closePhotoUploadModal();
+
+            } catch (error) {
+                console.error('Photo upload error:', error);
+                showNotification(error.message || 'Failed to upload photo. Please try again.', 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Upload Photo';
+            }
         }
+
+        // Photo Management Functions
 
         function saveCaptionsData() {
             try {
@@ -2362,29 +2817,82 @@
             }
         }
 
-        function loadPhotosData() {
+        async function loadPhotosData() {
             try {
-                // Load captions from localStorage
+                // Load approved photos from Supabase
+                const { data: photos, error } = await supabase
+                    .from('photos')
+                    .select('*')
+                    .eq('status', 'approved')
+                    .order('display_order', { ascending: true })
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                // Build club photos array with public URLs from Supabase
+                const supabasePhotos = await Promise.all((photos || []).map(async (photo) => {
+                    const { data: urlData } = supabase.storage
+                        .from('photos')
+                        .getPublicUrl(photo.storage_path);
+
+                    return {
+                        id: photo.id,
+                        url: urlData.publicUrl,
+                        caption: photo.caption || '',
+                        addedDate: photo.created_at,
+                        source: 'supabase'
+                    };
+                }));
+
+                // Load captions from localStorage for legacy photos
                 const storedCaptions = localStorage.getItem('puddingstoneCaptions');
                 if (storedCaptions) {
                     photoCaptions = JSON.parse(storedCaptions);
                 }
 
-                // Build photo list from PHOTO_FILES array
-                clubPhotos = PHOTO_FILES.map((filename, index) => {
+                // Add original photos from assets/photos/ directory
+                const legacyPhotos = PHOTO_FILES.map((filename, index) => {
                     const url = `assets/photos/${filename}`;
                     return {
-                        id: index,
+                        id: `legacy-${index}`,
                         url: url,
                         caption: photoCaptions[filename] || '',
-                        addedDate: new Date().toISOString()
+                        addedDate: '2024-01-01', // Default date for legacy photos
+                        source: 'legacy'
                     };
                 });
+
+                // Combine both sources - Supabase photos first, then legacy
+                clubPhotos = [...supabasePhotos, ...legacyPhotos];
 
                 renderCarousel();
                 renderGallery();
             } catch (error) {
                 console.error('Failed to load photos:', error);
+
+                // Fallback to legacy photos only if Supabase fails
+                try {
+                    const storedCaptions = localStorage.getItem('puddingstoneCaptions');
+                    if (storedCaptions) {
+                        photoCaptions = JSON.parse(storedCaptions);
+                    }
+
+                    clubPhotos = PHOTO_FILES.map((filename, index) => {
+                        const url = `assets/photos/${filename}`;
+                        return {
+                            id: `legacy-${index}`,
+                            url: url,
+                            caption: photoCaptions[filename] || '',
+                            addedDate: '2024-01-01',
+                            source: 'legacy'
+                        };
+                    });
+
+                    renderCarousel();
+                    renderGallery();
+                } catch (fallbackError) {
+                    console.error('Failed to load legacy photos:', fallbackError);
+                }
             }
         }
 
@@ -2407,7 +2915,7 @@
             }
         }
 
-        function handleMembershipRequest(e) {
+        async function handleMembershipRequest(e) {
             e.preventDefault();
 
             const name = document.getElementById('requestName').value.trim();
@@ -2429,256 +2937,296 @@
                 return;
             }
 
-            // Check for duplicate requests
-            const existingRequest = membershipRequests.find(req =>
-                req.email.toLowerCase() === email.toLowerCase() ||
-                req.name.toLowerCase() === nameValidation.name.toLowerCase()
-            );
+            try {
+                // Check for duplicate requests in Supabase
+                const { data: existingRequests, error: checkError } = await supabase
+                    .from('membership_requests')
+                    .select('*')
+                    .or(`email.ilike.${email},name.ilike.${nameValidation.name}`);
 
-            if (existingRequest) {
-                showNotification('A membership request already exists for this name or email', 'warning');
-                return;
-            }
+                if (checkError) throw checkError;
 
-            // Create request object
-            const request = {
-                id: Date.now(),
-                name: nameValidation.name,
-                email: email,
-                phone: phone,
-                message: message,
-                timestamp: new Date().toISOString(),
-                status: 'pending'
-            };
+                if (existingRequests && existingRequests.length > 0) {
+                    showNotification('A membership request already exists for this name or email', 'warning');
+                    return;
+                }
 
-            // Add to requests array
-            membershipRequests.push(request);
+                // Insert request into Supabase
+                const { data, error } = await supabase
+                    .from('membership_requests')
+                    .insert([
+                        {
+                            name: nameValidation.name,
+                            email: email,
+                            message: message
+                        }
+                    ])
+                    .select();
 
-            // Save to localStorage
-            if (!saveMembershipData()) {
+                if (error) throw error;
+
+                // Clear form
+                document.getElementById('membershipRequestForm').reset();
+                document.getElementById('charCount').textContent = '0';
+
+                // Show success message
+                showNotification('Membership request submitted successfully! We will review your application soon.', 'success');
+
+                // Reload admin data if admin is viewing
+                if (isAdminLoggedIn) {
+                    await loadAdminData();
+                }
+            } catch (error) {
+                console.error('Error submitting membership request:', error);
                 showNotification('Failed to submit request. Please try again.', 'error');
-                return;
             }
-
-            // Clear form
-            document.getElementById('membershipRequestForm').reset();
-            document.getElementById('charCount').textContent = '0';
-
-            // Show success message
-            showNotification('Membership request submitted successfully! We will review your application soon.', 'success');
         }
 
         // Admin Functions
-        function verifyAdmin() {
-            const password = document.getElementById('adminPassword').value;
-
-            if (password === CONFIG.ADMIN_PASSWORD) {
-                isAdminLoggedIn = true;
-                document.getElementById('adminAuth').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                loadAdminData();
-                showNotification('Admin login successful', 'success');
-            } else {
-                showNotification('Incorrect password', 'error');
-            }
+        async function loadAdminData() {
+            await displayPendingRequests();
+            await displayPendingPhotos();
+            await displayApprovedMembers();
         }
 
-        function logoutAdmin() {
-            isAdminLoggedIn = false;
-            document.getElementById('adminAuth').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('adminPassword').value = '';
-            showNotification('Logged out successfully', 'success');
-        }
-
-        function loadAdminData() {
-            displayPendingRequests();
-            displayApprovedMembers();
-            displayAdminPhotos();
-        }
-
-        function displayPendingRequests() {
+        async function displayPendingRequests() {
             const container = document.getElementById('pendingRequests');
-            const pendingRequests = membershipRequests.filter(req => req.status === 'pending');
 
-            if (pendingRequests.length === 0) {
-                container.innerHTML = '<p class="empty-state">No pending membership requests.</p>';
-                return;
+            try {
+                const { data: pendingRequests, error } = await supabase
+                    .from('membership_requests')
+                    .select('*')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!pendingRequests || pendingRequests.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No pending membership requests.</p>';
+                    return;
+                }
+
+                container.innerHTML = pendingRequests.map(request => {
+                    const date = new Date(request.created_at);
+                    const sanitizedName = sanitizeHTML(request.name);
+                    const sanitizedEmail = sanitizeHTML(request.email);
+                    const sanitizedMessage = sanitizeHTML(request.message || 'No message provided');
+
+                    return `
+                        <div class="request-card">
+                            <h4>${sanitizedName}</h4>
+                            <p><strong>Email:</strong> ${sanitizedEmail}</p>
+                            <div class="request-message">
+                                <strong>Message:</strong><br>
+                                ${sanitizedMessage}
+                            </div>
+                            <div class="request-meta">
+                                Submitted: ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-approve" onclick="approveRequest('${request.id}')">✓ Approve</button>
+                                <button class="btn btn-deny" onclick="denyRequest('${request.id}')">✕ Deny</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading pending requests:', error);
+                container.innerHTML = '<p class="empty-state">Error loading requests. Please try again.</p>';
             }
-
-            container.innerHTML = pendingRequests.map(request => {
-                const date = new Date(request.timestamp);
-                const sanitizedName = sanitizeHTML(request.name);
-                const sanitizedEmail = sanitizeHTML(request.email);
-                const sanitizedPhone = sanitizeHTML(request.phone || 'Not provided');
-                const sanitizedMessage = sanitizeHTML(request.message);
-
-                return `
-                    <div class="request-card">
-                        <h4>${sanitizedName}</h4>
-                        <p><strong>Email:</strong> ${sanitizedEmail}</p>
-                        <p><strong>Phone:</strong> ${sanitizedPhone}</p>
-                        <div class="request-message">
-                            <strong>Message:</strong><br>
-                            ${sanitizedMessage}
-                        </div>
-                        <div class="request-meta">
-                            Submitted: ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}
-                        </div>
-                        <div class="request-actions">
-                            <button class="btn btn-approve" onclick="approveRequest(${request.id})">✓ Approve</button>
-                            <button class="btn btn-deny" onclick="denyRequest(${request.id})">✕ Deny</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
 
-        function displayApprovedMembers() {
+        async function displayApprovedMembers() {
             const container = document.getElementById('approvedMembers');
 
-            if (approvedMembers.length === 0) {
-                container.innerHTML = '<p class="empty-state">No approved members yet.</p>';
-                return;
-            }
+            try {
+                const { data: members, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-            container.innerHTML = approvedMembers.map(member => {
-                const date = new Date(member.approvedDate);
-                const sanitizedName = sanitizeHTML(member.name);
-                const sanitizedEmail = sanitizeHTML(member.email);
+                if (error) throw error;
 
-                return `
-                    <div class="approved-member-card">
-                        <div class="member-info">
-                            <h4>${sanitizedName}</h4>
-                            <p>${sanitizedEmail} • Approved ${date.toLocaleDateString()}</p>
+                if (!members || members.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No registered members yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = members.map(member => {
+                    const date = new Date(member.created_at);
+                    const sanitizedName = sanitizeHTML(member.name);
+                    const sanitizedEmail = sanitizeHTML(member.email);
+
+                    return `
+                        <div class="approved-member-card">
+                            <div class="member-info">
+                                <h4>${sanitizedName}${member.is_admin ? ' <span style="color: var(--gold-accent);">(Admin)</span>' : ''}</h4>
+                                <p>${sanitizedEmail} • Joined ${date.toLocaleDateString()}</p>
+                            </div>
                         </div>
-                        <button class="btn remove-member" onclick="removeApprovedMember(${member.id})">Remove</button>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading approved members:', error);
+                container.innerHTML = '<p class="empty-state">Error loading members. Please try again.</p>';
+            }
         }
 
-        function approveRequest(requestId) {
-            const request = membershipRequests.find(req => req.id === requestId);
-            if (!request) return;
+        async function approveRequest(requestId) {
+            try {
+                // Update request status to approved
+                const { error } = await supabase
+                    .from('membership_requests')
+                    .update({ status: 'approved' })
+                    .eq('id', requestId);
 
-            // Update request status
-            request.status = 'approved';
+                if (error) throw error;
 
-            // Add to approved members
-            const approvedMember = {
-                id: request.id,
-                name: request.name,
-                email: request.email,
-                phone: request.phone,
-                approvedDate: new Date().toISOString()
-            };
-            approvedMembers.push(approvedMember);
-
-            // Save changes
-            if (!saveMembershipData()) {
+                // Refresh displays
+                await loadAdminData();
+                showNotification('Membership request approved! The applicant can now create an account.', 'success');
+            } catch (error) {
+                console.error('Error approving request:', error);
                 showNotification('Failed to approve request', 'error');
-                return;
             }
-
-            // Refresh displays
-            loadAdminData();
-            updateMembersListDisplay();
-            showNotification(`${request.name} has been approved!`, 'success');
         }
 
-        function denyRequest(requestId) {
-            const request = membershipRequests.find(req => req.id === requestId);
-            if (!request) return;
+        async function denyRequest(requestId) {
+            try {
+                // Update request status to rejected
+                const { error } = await supabase
+                    .from('membership_requests')
+                    .update({ status: 'rejected' })
+                    .eq('id', requestId);
 
-            // Remove from requests
-            membershipRequests = membershipRequests.filter(req => req.id !== requestId);
+                if (error) throw error;
 
-            // Save changes
-            if (!saveMembershipData()) {
+                // Refresh displays
+                await loadAdminData();
+                showNotification('Membership request denied', 'success');
+            } catch (error) {
+                console.error('Error denying request:', error);
                 showNotification('Failed to deny request', 'error');
-                return;
-            }
-
-            // Refresh display
-            loadAdminData();
-            showNotification(`Request from ${request.name} has been denied`, 'success');
-        }
-
-        function removeApprovedMember(memberId) {
-            const member = approvedMembers.find(m => m.id === memberId);
-            if (!member) return;
-
-            const sanitizedName = sanitizeHTML(member.name);
-            showNotification(`Remove ${sanitizedName} from approved members?`, 'warning');
-
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                const confirmBtn = document.createElement('button');
-                confirmBtn.textContent = 'Confirm';
-                confirmBtn.className = 'btn';
-                confirmBtn.style.marginTop = '10px';
-                confirmBtn.style.padding = '0.5rem 1rem';
-                confirmBtn.style.fontSize = '0.9rem';
-
-                confirmBtn.onclick = () => {
-                    // Remove from approved members
-                    approvedMembers = approvedMembers.filter(m => m.id !== memberId);
-
-                    // Remove from requests
-                    membershipRequests = membershipRequests.filter(req => req.id !== memberId);
-
-                    if (!saveMembershipData()) {
-                        showNotification('Failed to remove member', 'error');
-                        return;
-                    }
-
-                    loadAdminData();
-                    updateMembersListDisplay();
-                    showNotification(`${sanitizedName} has been removed`, 'success');
-                };
-
-                existingNotification.querySelector('.notification-content').appendChild(confirmBtn);
             }
         }
 
-        function saveMembershipData() {
+        async function displayPendingPhotos() {
+            const container = document.getElementById('pendingPhotos');
+
             try {
-                localStorage.setItem('puddingstoneMembershipRequests', JSON.stringify(membershipRequests));
-                localStorage.setItem('puddingstoneApprovedMembers', JSON.stringify(approvedMembers));
-                return true;
-            } catch (error) {
-                console.error('Failed to save membership data:', error);
-                return false;
-            }
-        }
+                const { data: pendingPhotos, error } = await supabase
+                    .from('photos')
+                    .select('*, user_profiles(name)')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
 
-        function loadMembershipData() {
-            try {
-                const storedRequests = localStorage.getItem('puddingstoneMembershipRequests');
-                const storedApproved = localStorage.getItem('puddingstoneApprovedMembers');
+                if (error) throw error;
 
-                if (storedRequests) {
-                    membershipRequests = JSON.parse(storedRequests);
+                if (!pendingPhotos || pendingPhotos.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No pending photos.</p>';
+                    return;
                 }
 
-                if (storedApproved) {
-                    approvedMembers = JSON.parse(storedApproved);
-                    updateMembersListDisplay();
-                }
+                const photoPromises = pendingPhotos.map(async (photo) => {
+                    const date = new Date(photo.created_at);
+                    const uploaderName = photo.user_profiles?.name || 'Unknown';
+                    const sanitizedCaption = photo.caption ? sanitizeHTML(photo.caption) : '<em style="color: var(--text-light);">No caption</em>';
+
+                    // Get public URL for the photo
+                    const { data: urlData } = supabase.storage
+                        .from('photos')
+                        .getPublicUrl(photo.storage_path);
+
+                    return `
+                        <div class="request-card" style="position: relative;">
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <img src="${urlData.publicUrl}" style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px; border: 2px solid var(--border-color);" alt="Pending photo">
+                                <div style="flex: 1;">
+                                    <h4>Uploaded by: ${sanitizeHTML(uploaderName)}</h4>
+                                    <p><strong>Caption:</strong> ${sanitizedCaption}</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.5rem;">
+                                        Uploaded: ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn btn-approve" onclick="approvePhoto('${photo.id}')">✓ Approve</button>
+                                <button class="btn btn-deny" onclick="rejectPhoto('${photo.id}')">✕ Reject</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const photoHTML = await Promise.all(photoPromises);
+                container.innerHTML = photoHTML.join('');
+
             } catch (error) {
-                console.error('Failed to load membership data:', error);
-                showNotification('Failed to load membership data', 'warning');
+                console.error('Error loading pending photos:', error);
+                container.innerHTML = '<p class="empty-state">Error loading photos. Please try again.</p>';
+            }
+        }
+
+        async function approvePhoto(photoId) {
+            try {
+                const { error } = await supabase
+                    .from('photos')
+                    .update({ status: 'approved' })
+                    .eq('id', photoId);
+
+                if (error) throw error;
+
+                await loadAdminData();
+                // Refresh gallery to show new photo
+                loadPhotosData();
+                showNotification('Photo approved and published to gallery!', 'success');
+            } catch (error) {
+                console.error('Error approving photo:', error);
+                showNotification('Failed to approve photo', 'error');
+            }
+        }
+
+        async function rejectPhoto(photoId) {
+            try {
+                // Get photo info to delete from storage
+                const { data: photo, error: fetchError } = await supabase
+                    .from('photos')
+                    .select('storage_path')
+                    .eq('id', photoId)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                // Delete from storage
+                const { error: storageError } = await supabase.storage
+                    .from('photos')
+                    .remove([photo.storage_path]);
+
+                if (storageError) throw storageError;
+
+                // Delete from database
+                const { error: dbError } = await supabase
+                    .from('photos')
+                    .delete()
+                    .eq('id', photoId);
+
+                if (dbError) throw dbError;
+
+                await loadAdminData();
+                showNotification('Photo rejected and deleted', 'success');
+            } catch (error) {
+                console.error('Error rejecting photo:', error);
+                showNotification('Failed to reject photo', 'error');
             }
         }
 
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication status first
+            await checkAuthSession();
+
             initEventProposalForm();
             initMembershipForm();
-            initPhotoManagement();
-            loadMembershipData();
+            updateMembersListDisplay();
             loadEventsData();
             loadPhotosData();
             initCarousel();
